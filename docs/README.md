@@ -5,19 +5,27 @@ README.md
 <!-- **[Live site](tba)** -->
 
 **Description**
-*Potential name ideas: NPSeed, Karagen, Charagen,NSeed, PeaSeed, Atelier Pygmalia, CharaCraft...*
+This app lets a user randomly generate an NPC character for DND or other story/game purposes.
+A lazy-app-tool for people who need filler content fast, general inspiration, or some help
+finalizing the details of their own characters.
+*Potential name ideas: NPSeed, Karagen, Charagen, Atelier Pygmalia, CharaCraft...*
 
 ## Minimal Viable Product (MVP)
-
+* User accounts and login.
+* Random generation character form.
+* Ability to customize randomizer options.
+* User able to save characters.
 
 ## Feature List
-* User accounts - can save characters and maker-settings
-* <3 Random character generator - quick-build, standard-form
-* <3 Character sheets - mini-many, full form, printable
-* Weighted odds
+* (MVP) User accounts - can save characters and maker-settings
+* (MVP) Random character generator - quick-build, standard-form
+* (MVP) Character pages
+* Character sheet printable, mini-format
+* Weighted randomization odds
 * Customizable settings - adding categories, options, odds
 * Generator maker - able to give name and options and add options.
 
+**Details**
 - User account (sign-up, sign-in, sign-out)
   - Guest
   - Saved named custom settings
@@ -54,14 +62,41 @@ README.md
 
 
 ## Models
-Users
-Characters
-  charaTraits
-Makers
-  traitOdds
-traits
-traitTypes
+| Users    | Data Type & Constraints |
+|----------|-------------------------|
+| id       | PK |
+| username | varchar(40) unique |
+| hashword | varchar(255)       |
 
+Characters
+id
+userId
+name
+
+CharaTraits
+id
+characterId
+traitId
+
+Generators
+id
+userId
+title
+
+TraitTypes
+id
+type
+
+Traits
+id
+trait
+typeId
+
+TraitOdds
+id
+generatorId
+traitId
+odds
 
 ## Endpoints
 | GET | `/` | Splash page/home page
@@ -69,20 +104,22 @@ traitTypes
 | POST | `/login` |
 | POST | `/logout` |
 
-categories - 5
+categories - 5?
 | GET | `/generator/start` |
-`/generator/basics`
+`/generator/essentials`
+`/generator/appearance`
+`/generator/background`
+`/generator/relations`
+`/generator/abilities`
+`/generator/personality`
+`/generator/quest`
 
 /users/:id
 /users/:id/characters
 /users/:id/characters/:charaId
 /users/:id/generators
 
-/generator/essentials
----> fetches essentials trait types, trait options
-
-
-
+**Scribbling trait-option-field ideas**
 ESSENTIALS
 Name
 gender
@@ -122,13 +159,6 @@ useful knowledge
 items/rewards
 
 
-`/generator/appearance`
-`/generator/background`
-`/generator/relations`
-`/generator/stats`
-`/generator/personality`
-`/generator/quest`
-
 ## Templates
 
 Splash
@@ -163,10 +193,12 @@ Custom settings
 Contact, About, Help/FAQ, etc.
 
 ## Wireframes
+in my notebook
 
 ## Technology List
 - React
 - Redux
 - Express
 - Sequelize
+- Postgres
 - Sass
