@@ -2,7 +2,7 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface("TraitOptions", [
+    await queryInterface.bulkInsert("TraitOptions", [
       { traitId: 1, option: "human" },
       { traitId: 1, option: "elf" },
       { traitId: 1, option: "dwarf" },

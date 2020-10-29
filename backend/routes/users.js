@@ -15,17 +15,23 @@ usersRouter.get("/:id",
     if (user) res.json({ user })
   })
 
+  usersRouter.get("/token",
+  checkAuth,
+  async (req, res) => {
+    console.log("gettin dat token validation!", req.user)
+    if (req.user) return res.json({isGoodToken: true})
+  })
+  
 // Make user authentication token
-usersRouter.post("/token",
+usersRouter.put("/token",
   userValidators,
   async (req, res, next) => {
     const { username, password } = req.body
     const user = await User.findOne({
       where: { username },
-      attributes: ["id", "username", "email"]
     })
     // Reject request if user doesn't exist or password is invalid
-    if (!user || user.validatePassword(password)) {
+    if (!user || await user.validatePassword(password)) {
       const err = Error("Login big fail")
       err.status = 401
       err.title = "401 Login Fail"
@@ -33,8 +39,21 @@ usersRouter.post("/token",
       return next(err)
     }
     const token = makeToken(user)
+    // user.token = token
+    // user.save()
+    // console.log("user made taken!\n\n", user)
     res.json({ token, user })
   })
+
+  // Why successful even if checkAuthr fails?
+usersRouter.delete("/token",
+  checkAuth,
+  async (req, res) => {
+    req.user.token = null
+    await req.user.save()
+    res.json({ message: 'Deleted that token for ya' })
+  }
+)
 
 // Make new user and token
 usersRouter.post("/users",

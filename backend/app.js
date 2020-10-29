@@ -3,7 +3,8 @@ const morgan = require('morgan')
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const { ValidationError } = require('sequelize')
-const { environment, port } = require('./config')
+const { environment } = require('./config')
+const frontendPort = 'http://localhost:3000'
 
 // Route imports
 const routes = require('./routes/routes')
@@ -13,11 +14,11 @@ const app = express()
 
 // Setting up backend app
 app.use(morgan('dev'))
-app.use(cors({ origin: port }))
-// app.use(cookieParser())
+app.use(cors({ origin: frontendPort }))
+app.use(cookieParser())
 app.use(express.json())
 // TODO Check how these work out. Diff between Twitter/Pokemon, understand why
-// app.use(express.urlencoded({extended: false}))
+app.use(express.urlencoded({extended: false}))
 // app.use(static(path.join(__dirname, 'public')))
 
 // Routes
@@ -67,7 +68,7 @@ app.use((err, req, res, next) => {
 app.use((err, req, res, next) => {
   err.status = (err.status || 500)
   const isProduction = environment === 'production'
-  res.json({
+  res.status(err.status).json({
     title: err.title || '500 Server Error',
     message: err.message,
     errors: err.errors,

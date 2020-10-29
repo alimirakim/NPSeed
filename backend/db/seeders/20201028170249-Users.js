@@ -5,10 +5,11 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.bulkInsert('Users', [
       { username: "admin", email: "almyki@gmail.com", hashword: bcrypt.hashSync("password") },
-      { username: "demo", email: "", hashword: bcrypt.hashSync("demo") },
-      { username: "lucien", email: "", hashword: bcrypt.hashSync("lucien") },
-      { username: "rosalyn", email: "", hashword: bcrypt.hashSync("rosalyn") },
+      { username: "demo", hashword: bcrypt.hashSync("demo") },
+      { username: "lucien", hashword: bcrypt.hashSync("lucien") },
+      { username: "rosalyn", hashword: bcrypt.hashSync("rosalyn") },
     ])
+    
     /**
      * Add seed commands here.
      *
@@ -33,4 +34,4 @@ module.exports = {
      * await queryInterface.bulkDelete('People', null, {});
      */
   }
-};
+}

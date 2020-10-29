@@ -1,53 +1,60 @@
 import React from 'react'
+import { TextField } from '@material-ui/core'
+
+
+export function UsernameForm({ username, handleChange }) {
+  return (
+    <TextField
+      label="Username"
+      type="text"
+      onChange={handleChange("username")}
+      value={username}
+      placeholder="Username"
+      required
+      variant="outlined"
+      InputLabelProps={{shrink: true}}
+    />
+  )
+}
 
 export function EmailForm({ email, handleChange }) {
   return (
-    <label>e-mail
-      <input type="email"
-        onChange={handleChange("email")}
-        value={email}
-        placeholder="e-mail"
-        required
-      />
-    </label>
+    <TextField
+      label="e-mail"
+      type="email"
+      onChange={handleChange("email")}
+      value={email}
+      placeholder="e-mail"
+      variant="outlined"
+    />
   )
 }
 
 export function PasswordForm({ password, handleChange }) {
   return (
-    <label>Password
-      <input type="password"
-        onChange={handleChange("password")}
-        placeholder="Password"
-        value={password}
-        required
-      />
-    </label>
+    <TextField
+      label="Password"
+      type="password"
+      onChange={handleChange("password")}
+      placeholder="Password"
+      value={password}
+      required
+      variant="outlined"
+    />
   )
 }
 
 export function ConfirmPasswordForm({ confirmPassword, handleChange }) {
   return (
-    <label>Confirm Password
-      <input type="password"
-        onChange={handleChange("confirmPassword")}
-        placeholder="Confirm Password"
-        value={confirmPassword}
-        required
-      />
-    </label>
-  )
-}
+    <TextField
+      label="Confirm Password"
+      type="password"
+      onChange={handleChange("confirmPassword")}
+      placeholder="Confirm Password"
+      value={confirmPassword}
+      required
+      variant="outlined"
 
-export function UsernameForm({ username, handleChange }) {
-  return (
-    <label>Username
-      <input type="text"
-        onChange={handleChange("username")}
-        value={username}
-        placeholder="Username"
-        required
-      />
-    </label>
+    />
   )
 }
