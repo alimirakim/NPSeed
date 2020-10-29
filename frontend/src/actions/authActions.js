@@ -12,11 +12,13 @@ export const setToken = token => ({ type: SET_TOKEN, token })
 // THUNK ACTION CREATORS
 // Login
 export const login = (username, password) => async dispatch => {
-  const res = await fetch(`${basePath}/session`, {
+  console.log("trying to login...")
+  const res = await fetch(`${basePath}/token`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username, password })
   })
+  
   if (res.ok) {
     const { token } = await res.json()
     localStorage.setItem(TOKEN, token)
@@ -40,5 +42,6 @@ export const logout = () => async (dispatch, getState) => {
 // Load Token
 export const loadToken = () => async dispatch => {
   const token = localStorage.getItem(TOKEN)
+  console.log("localStorage token", token)
   if (token) dispatch(setToken(token))
 }

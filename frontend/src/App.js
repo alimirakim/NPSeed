@@ -26,6 +26,7 @@ function App() {
   useEffect(() => {
     setLoaded(true)
     dispatch(loadToken())
+    console.log('loading')
   }, [dispatch])
   
   // TODO What exactly is this, why must loadToken() before render
