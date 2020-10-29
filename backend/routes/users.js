@@ -3,7 +3,6 @@ const usersRouter = require('express-promise-router')()
 const { User } = require('../db/models')
 const { userValidators, emailValidator } = require('./validators')
 const { makeToken, checkAuth } = require("../auth")
-console.log(checkAuth)
 
 // Get user by id
 usersRouter.get("/:id",
@@ -38,7 +37,7 @@ usersRouter.post("/token",
   })
 
 // Make new user and token
-usersRouter.post("/",
+usersRouter.post("/users",
   userValidators,
   emailValidator,
   async (req, res) => {

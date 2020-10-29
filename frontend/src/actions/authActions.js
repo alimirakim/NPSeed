@@ -18,7 +18,7 @@ export const login = (username, password) => async dispatch => {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username, password })
   })
-  
+  await res.json()
   if (res.ok) {
     const { token } = await res.json()
     localStorage.setItem(TOKEN, token)

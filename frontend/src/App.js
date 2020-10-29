@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom'
+import CssBaseline from '@material-ui/core/CssBaseline'
 
 import { loadToken } from './actions/authActions'
 import LoginForm from './components/LoginForm'
+import SignupForm from './components/SignupForm'
 import Header from './components/Header'
 
 // TODO I don't get it
 // Function Route Component
+// TODO Why not redirecting?
 function PrivateRoute({ component: Component, ...rest }) {
   <Route {...rest} render={props => {
     rest.hasToken === false
@@ -26,7 +29,6 @@ function App() {
   useEffect(() => {
     setLoaded(true)
     dispatch(loadToken())
-    console.log('loading')
   }, [dispatch])
   
   // TODO What exactly is this, why must loadToken() before render
@@ -35,8 +37,10 @@ function App() {
   
   return (
     <BrowserRouter>
+      <CssBaseline />
       <Switch>
-        <Route path="/" component={LoginForm} />
+        <Route path="/signup" component={SignupForm} />
+        <Route path="/login" component={LoginForm} />
         <PrivateRoute path="/" exact={true} component={Header} hasToken={hasToken} />
       </Switch>
     </BrowserRouter>
