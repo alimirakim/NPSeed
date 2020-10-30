@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
+import {NavLink, Link as RouterLink} from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '../actions/authActions'
 
 // Material UI
-import { makeStyles} from '@material-ui/core/styles'
-import { AppBar, Toolbar, Link, Button, IconButton, Typography, Menu, MenuItem } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
+import { AppBar, Toolbar, Link, Button, IconButton, Typography, Menu, MenuItem, ButtonGroup } from '@material-ui/core'
 import { AccountCircle } from '@material-ui/icons'
 const useStyles = makeStyles(theme => ({
   root: { flexGrow: 1 },
@@ -15,73 +16,62 @@ const useStyles = makeStyles(theme => ({
 
 export default function Header() {
   const dispatch = useDispatch()
-  const [open, setOpen] = useState(false)
+  // const [open, setOpen] = useState(false)
   const [anchor, setAnchor] = useState(null)
-  const token = useSelector(state => state.authentication.token)
-  
-  
+  const hasToken = useSelector(state => state.authentication.token ? true : false)
+  console.log("do we hasToken?\n\n", hasToken)
+  const user = useSelector(state => state.user)
+
   const classes = useStyles()
 
-  const handleClick = ev => {
-    setAnchor(ev.currentTarget)
-  }
+  const handleClick = ev => setAnchor(ev.currentTarget)
 
   const handleClose = () => {
     setAnchor(null)
   }
-  
+
   const handleLogout = (ev) => {
-    console.log("log out??\n\n")
     setAnchor(null)
     dispatch(logout())
   }
 
-  const toggle = () => {
-    setOpen(!open)
-  }
+  // const toggle = () => {
+  //   setOpen(!open)
+  // }
 
   return (
     <AppBar position="static">
       <Toolbar>
 
-
-
-        <Typography variant="h6" className={classes.title}>
-          <Link href="/splash" color="secondary">NPSeed</Link>
+        <Link component={NavLink} to="/splash" color="secondary">NPSeed</Link>
+        <Typography variant="h6" className={classes.title} hidden={!hasToken}>
+          Hey hey hey, {user.username}!
     </Typography>
-        <Button href="/signup" variant="contained">Sign up</Button>
-        <Button href="/login" color="inherit">Login</Button>
 
+        <div edge="end" hidden={hasToken}>
+          <Button component={NavLink} to={{pathname: "/signup", state: {hasToken}}} variant="contained" hidden={hasToken}>Sign up</Button>
+          <Button component={NavLink} to="/login" color="inherit" hidden={hasToken}>Login</Button>
+        </div>
+        {/* Account Menu */}
+        <nav hidden={!hasToken}>
+          <IconButton onClick={handleClick}
+            edge="start" className={classes.menuButton} color="inherit"
+            aria-label="menu" aria-controls="simple-menu" aria-haspopup="true">
+            <AccountCircle edge="end" />
+          </IconButton>
 
-{/* Account Menu */}
-        <IconButton onClick={handleClick}
-          edge="start" className={classes.menuButton} color="inherit"
-          aria-label="menu" aria-controls="simple-menu" aria-haspopup="true">
-          <AccountCircle edge="end" />
-        </IconButton>
-        <Menu anchorEl={anchor}
-          keepMounted
-          open={Boolean(anchor)}
-          onClose={handleClose}
-        >
-          <MenuItem onClick={handleClose} href="/profile"><Link href="/profile">Profile</Link></MenuItem>
-          <MenuItem onClick={handleClose} href="/characters"><Link href="/characters">Characters</Link></MenuItem>
-          <MenuItem onClick={handleLogout} href="/logout">Logout</MenuItem>
-        </Menu>
+          <Menu anchorEl={anchor}
+            keepMounted
+            open={Boolean(anchor)}
+            onClose={handleClose}
+          >
+
+            <MenuItem onClick={handleClose} component={NavLink} to={{pathname: "/profile", props: {hasToken}}}>Profile</MenuItem>
+            <MenuItem onClick={handleClose} component={NavLink} to={{pathname: "/characters", props: {hasToken}}}>Characters</MenuItem>
+            <MenuItem onClick={handleLogout}>Logout</MenuItem>
+          </Menu>
+        </nav>
       </Toolbar>
     </AppBar>
-  )
-  return (
-    <header>
-      <nav>
-        <ul>
-          <li><a href="/">NPSeed</a></li>
-          <li><a href="/signup">Sign up</a></li>
-          <li><a href="/login">Login</a></li>
-          <li><a href="/generator/start">Generate NPC</a></li>
-          <li><a href="/profile">Profile</a></li>
-        </ul>
-      </nav>
-    </header>
   )
 }

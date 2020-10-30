@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Redirect } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { login } from '../actions/authActions'
-import { UsernameForm, PasswordForm } from './FormInputs'
+import { UsernameForm, PasswordForm, ErrorsDisplay } from './FormInputs'
 
 import { makeStyles } from '@material-ui/core/styles'
 import { Container, Button } from '@material-ui/core'
@@ -13,6 +13,8 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
+
+
 export default function LoginForm() {
   const classes = useStyles()
   const dispatch = useDispatch()
@@ -21,13 +23,14 @@ export default function LoginForm() {
     password: "password",
   })
 
-  const token = useSelector(state => state.authentication.token)
+  const { token, errors } = useSelector(state => state.authentication)
+  console.log("errors deconstructed\n\n", errors, errors.errors)
+  
   if (token) return <Redirect to="/" />
 
   const handleSubmit = (ev) => {
     ev.preventDefault()
     dispatch(login(userData.username, userData.password))
-    
   }
 
   const handleChange = (property) => (ev) => {
@@ -36,19 +39,21 @@ export default function LoginForm() {
 
   return (
     <Container maxWidth="xs">
-    <article id="login" className={classes.root}>
-      <h2>Log-in</h2>
+      <article id="login" className={classes.root}>
+        <h2>Log-in</h2>
+        
+        <ErrorsDisplay />
 
-      <form onSubmit={handleSubmit}>
-        <UsernameForm username={userData.username} handleChange={handleChange} />
-        <br />
-        <PasswordForm password={userData.password} handleChange={handleChange} />
-        <br />
-        <Button variant="contained" type="submit">Log-in</Button>
-      </form>
+        <form onSubmit={handleSubmit}>
+          <UsernameForm username={userData.username} handleChange={handleChange} />
+          <br />
+          <PasswordForm password={userData.password} handleChange={handleChange} />
+          <br />
+          <Button variant="contained" type="submit">Log-in</Button>
+        </form>
 
-      <small>Need an account? <a href="/signup">Sign-up here!</a></small>
-    </article>
+        <small>Need an account? <a href="/signup">Sign-up here!</a></small>
+      </article>
     </Container>
   )
 }

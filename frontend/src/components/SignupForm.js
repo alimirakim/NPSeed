@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import {Redirect} from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { makeUser } from '../actions/userActions'
-import { UsernameForm, EmailForm, PasswordForm, ConfirmPasswordForm } from './FormInputs'
+import { UsernameForm, EmailForm, PasswordForm, ConfirmPasswordForm, ErrorsDisplay } from './FormInputs'
 
 import { Button } from '@material-ui/core'
 
@@ -10,7 +10,7 @@ export default function SignUpForm() {
   const dispatch = useDispatch()
   const [userData, setUserData] = useState({
     username: "",
-    email: null,
+    email: "",
     password: "password",
     confirmPassword: "password",
   })
@@ -31,6 +31,8 @@ export default function SignUpForm() {
   return (
     <article id="signup-form">
       <h2>Sign up</h2>
+      
+      <ErrorsDisplay />
 
       <form onSubmit={handleSubmit}>
         {/* <input type="hidden" name="_csrf" value={csrfToken} /> */}

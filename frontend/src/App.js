@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom'
 
 // Material-UI
-import { CssBaseline, Container, AppBar, Toolbar, Typography, Link, Button, IconButton } from '@material-ui/core'
+import { CssBaseline} from '@material-ui/core'
 
 import { loadToken } from './actions/authActions'
 import Splash from './components/Splash'
@@ -20,8 +20,13 @@ import Character from './components/Character'
 // TODO Why not redirecting?
 function PrivateRoute({ component: Component, ...rest }) {
   return (
-    <Route {...rest} render={props => { rest.hasToken === false 
-      ? <Redirect to="/signup" /> : <Component {...props} />
+    <Route {...rest} render={props => { 
+      console.log("what is rest and props", rest.hasToken)//, props)
+      rest.hasToken === false 
+      ? <Redirect to="/signup" /> 
+      // WTF
+      : console.log("hmmm?\n")
+      return <Component {...props} />
     }} />
   )
 }
@@ -30,22 +35,26 @@ function App() {
   const [loaded, setLoaded] = useState(false)
   // const [isGoodToken, setIsGoodToken] = useState(false)
   const dispatch = useDispatch()
-  const hasToken = useSelector(state => state.authentication.token)
-
+  // const [hasToken, setHasToken] = useState(false)
+  // const token = useSelector(state => state.authentication.token)
+  const hasToken = useSelector(state => state.authentication.token ? true : false)
+  console.log("what up hasToken", hasToken)
+  // if (token && setHasToken === false) setHasToken(true)
+  const user = useSelector(state => state.user)
   useEffect(() => {
     setLoaded(true)
     dispatch(loadToken())
   }, [dispatch])
 
   // TODO What exactly is this, why must loadToken() before render
-  if (!loaded) return null
+  if (!loaded || !user) return null
 
   return (
     <>
       <CssBaseline />
-        <Header />
 
         <BrowserRouter>
+        <Header />
           <Switch>
             <Route path="/splash" component={Splash} />
             <Route path="/signup" component={SignupForm} />
@@ -54,8 +63,11 @@ function App() {
             <Route path="/generator" component={GeneratorForm} />
             
             {/* <PrivateRoute path="/" exact={true} component={Footer} hasToken={hasToken} /> */}
-            <PrivateRoute path="/profile/:userId" component={Profile} />
-            <PrivateRoute path="/characters/:charId" component={Character} />
+            <PrivateRoute path={"/profile"} component={Profile} hasToken={hasToken} />
+            {/* <PrivateRoute path={`/profile/${user.id}`} component={Profile} hasToken={hasToken} /> */}
+            <PrivateRoute path={"/characters"} component={Character} hasToken={hasToken} />
+            {/* <PrivateRoute path={`/users/:userId/characters`} component={Character} hasToken={hasToken} /> */}
+            {/* <PrivateRoute path={`/users/:userId/characters/:charId`} component={Character} hasToken={hasToken} /> */}
           </Switch>
         </BrowserRouter>
         

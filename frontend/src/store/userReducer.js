@@ -1,10 +1,10 @@
 import { MAKE_USER } from '../actions/userActions'
 
 
-function usersReducer(state=[], action) {
+function usersReducer(state={}, action) {
   switch (action.type) {
     case MAKE_USER: {
-      return [...state, action.user ]
+      return action.user
     }
     default:
       return state

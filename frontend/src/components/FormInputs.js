@@ -1,6 +1,22 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { useSelector } from 'react-redux'
 import { TextField } from '@material-ui/core'
 
+export function ErrorsDisplay() {
+  const errors = useSelector(state => state.authentication.errors)
+  const [hasErrors, setHasErrors] = useState(false)
+  if (errors.length && hasErrors === false) setHasErrors(true)
+  return (
+    <section hidden={!hasErrors}>
+      <h3><strong>Sorry, we got some errors:</strong></h3>
+      <ul>
+        {errors.map((error, i) => {
+          return <li key={i}>{error}</li>
+        })}
+      </ul>
+    </section>
+  )
+}
 
 export function UsernameForm({ username, handleChange }) {
   return (
@@ -12,7 +28,7 @@ export function UsernameForm({ username, handleChange }) {
       placeholder="Username"
       required
       variant="outlined"
-      InputLabelProps={{shrink: true}}
+      InputLabelProps={{ shrink: true }}
     />
   )
 }

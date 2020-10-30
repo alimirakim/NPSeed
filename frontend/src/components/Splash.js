@@ -1,4 +1,7 @@
+import { Link as RouterLink} from 'react-router-dom'
+
 import { Button } from '@material-ui/core'
+
 
 export default function Splash() {
   return (
@@ -14,9 +17,10 @@ export default function Splash() {
       <li></li>
       <li></li>
     </ol>
-    <Button href="/signup" variant="contained">Make an Account</Button>
-    <Button href="/login" variant="outlined">Login</Button>
-    <Button href="/generator/start" variant="contained" color="secondary" size="large">Start</Button>
+
+    <Button component={RouterLink} to="/signup" variant="contained">Make an Account</Button>
+    <Button component={RouterLink} to="/login" variant="outlined">Login</Button>
+    <Button component={RouterLink} to="/generator/start" variant="contained" color="secondary" size="large">Start</Button>
     <small>No account needed to use this generator, but you can save your characters if you sign up!</small>
   </article>
   )
