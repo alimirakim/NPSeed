@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import {NavLink, Link as RouterLink} from 'react-router-dom'
+import { NavLink, Link as RouterLink } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '../actions/authActions'
 
@@ -49,7 +49,7 @@ export default function Header() {
     </Typography>
 
         <div edge="end" hidden={hasToken}>
-          <Button component={NavLink} to={{pathname: "/signup", state: {hasToken}}} variant="contained" hidden={hasToken}>Sign up</Button>
+          <Button component={NavLink} to={{ pathname: "/signup", state: { hasToken } }} variant="contained" hidden={hasToken}>Sign up</Button>
           <Button component={NavLink} to="/login" color="inherit" hidden={hasToken}>Login</Button>
         </div>
         {/* Account Menu */}
@@ -66,8 +66,8 @@ export default function Header() {
             onClose={handleClose}
           >
 
-            <MenuItem onClick={handleClose} component={NavLink} to={{pathname: "/profile", props: {hasToken}}}>Profile</MenuItem>
-            <MenuItem onClick={handleClose} component={NavLink} to={{pathname: "/characters", props: {hasToken}}}>Characters</MenuItem>
+            <MenuItem onClick={handleClose} component={NavLink} to={{ pathname: "/profile", props: { hasToken } }}>Profile</MenuItem>
+            <MenuItem onClick={handleClose} component={NavLink} to={{ pathname: "/characters", props: { hasToken } }}>Characters</MenuItem>
             <MenuItem onClick={handleLogout}>Logout</MenuItem>
           </Menu>
         </nav>

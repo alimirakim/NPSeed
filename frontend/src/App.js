@@ -33,14 +33,12 @@ function PrivateRoute({ component: Component, ...rest }) {
 
 function App() {
   const [loaded, setLoaded] = useState(false)
-  // const [isGoodToken, setIsGoodToken] = useState(false)
   const dispatch = useDispatch()
   // const [hasToken, setHasToken] = useState(false)
   // const token = useSelector(state => state.authentication.token)
   const hasToken = useSelector(state => state.authentication.token ? true : false)
-  console.log("what up hasToken", hasToken)
-  // if (token && setHasToken === false) setHasToken(true)
   const user = useSelector(state => state.user)
+  
   useEffect(() => {
     setLoaded(true)
     dispatch(loadToken())
@@ -64,10 +62,10 @@ function App() {
             
             {/* <PrivateRoute path="/" exact={true} component={Footer} hasToken={hasToken} /> */}
             <PrivateRoute path={"/profile"} component={Profile} hasToken={hasToken} />
-            {/* <PrivateRoute path={`/profile/${user.id}`} component={Profile} hasToken={hasToken} /> */}
-            <PrivateRoute path={"/characters"} component={Character} hasToken={hasToken} />
-            {/* <PrivateRoute path={`/users/:userId/characters`} component={Character} hasToken={hasToken} /> */}
-            {/* <PrivateRoute path={`/users/:userId/characters/:charId`} component={Character} hasToken={hasToken} /> */}
+            <PrivateRoute path={`/profile/:id`} component={Profile} hasToken={hasToken} />
+            {/* <PrivateRoute path={"/characters"} component={Character} hasToken={hasToken} /> */}
+            <PrivateRoute path={`/users/:userId/characters`} component={Profile} hasToken={hasToken} />
+            <PrivateRoute path={`/users/:userId/characters/:charId`} component={Character} hasToken={hasToken} />
           </Switch>
         </BrowserRouter>
         
