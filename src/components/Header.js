@@ -51,7 +51,6 @@ export default function Header() {
           Hey hey hey, {user.username}!
         </Typography>
 
-
         {/* Account Menu */}
         <nav hidden={!hasToken}>
           <IconButton onClick={handleClick}

@@ -22,11 +22,16 @@ function PrivateRoute({ component: Component, ...rest }) {
   return (
     <Route {...rest} render={props => { 
       console.log("what is rest and props", rest.hasToken)//, props)
-      rest.hasToken === false 
-      ? <Redirect to="/signup" /> 
+      if (rest.hasToken) {
+        return <Component {...props} /> 
+      } else {
+        <Redirect to="/signup" />
+      }
+      // return rest.hasToken === false 
+      // ? <Redirect to="/signup" /> 
       // WTF
-      : console.log("hmmm?\n")
-      return <Component {...props} />
+      // : <Component {...props} />
+      
     }} />
   )
 }
