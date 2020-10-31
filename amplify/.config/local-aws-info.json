@@ -1,7 +1,0 @@
-{
-    "production": {
-        "configLevel": "project",
-        "useProfile": true,
-        "profileName": "alimirakim"
-    }
-}
