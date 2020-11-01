@@ -8,7 +8,7 @@ export const GET_USER_CHARS = 'GET_USER_CHARS'
 
 export const getUserChars = (id) => async (dispatch) => {
   const token = localStorage.getItem(TOKEN)
-  const res = await fetch(`${basePath}/users/${id}/characters`,
+  const res = await fetch(`${basePath}/characters/users/${id}`,
     {
       headers: { Authorization: `Bearer ${token}` }
     }

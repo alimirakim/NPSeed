@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom'
 
 // Material-UI
-import { CssBaseline} from '@material-ui/core'
+import { CssBaseline } from '@material-ui/core'
 
 import { loadToken } from './actions/authActions'
 import Splash from './components/Splash'
@@ -20,18 +20,10 @@ import Character from './components/Character'
 // TODO Why not redirecting?
 function PrivateRoute({ component: Component, ...rest }) {
   return (
-    <Route {...rest} render={props => { 
-      console.log("what is rest and props", rest.hasToken)//, props)
-      if (rest.hasToken) {
-        return <Component {...props} /> 
-      } else {
-        <Redirect to="/signup" />
-      }
-      // return rest.hasToken === false 
-      // ? <Redirect to="/signup" /> 
-      // WTF
-      // : <Component {...props} />
-      
+    <Route {...rest} render={props => {
+      console.log("what is rest.hasToken", rest.hasToken)//, props)
+      if (rest.hasToken) return <Component {...props} />
+      else return <Redirect to="/signup" />
     }} />
   )
 }
@@ -43,7 +35,7 @@ function App() {
   // const token = useSelector(state => state.authentication.token)
   const hasToken = useSelector(state => state.authentication.token ? true : false)
   const user = useSelector(state => state.user)
-  
+
   useEffect(() => {
     setLoaded(true)
     dispatch(loadToken())
@@ -56,25 +48,25 @@ function App() {
     <>
       <CssBaseline />
 
-        <BrowserRouter>
+      <BrowserRouter>
         <Header />
-          <Switch>
-            <Route path="/splash" component={Splash} />
-            <Route path="/signup" component={SignupForm} />
-            <Route path="/login" component={LoginForm} />
-            
-            <Route path="/generator" component={GeneratorForm} />
-            
-            {/* <PrivateRoute path="/" exact={true} component={Footer} hasToken={hasToken} /> */}
-            <PrivateRoute path={"/profile"} component={Profile} hasToken={hasToken} />
-            <PrivateRoute path={`/profile/:id`} component={Profile} hasToken={hasToken} />
-            {/* <PrivateRoute path={"/characters"} component={Character} hasToken={hasToken} /> */}
-            <PrivateRoute path={`/users/:userId/characters`} component={Profile} hasToken={hasToken} />
-            <PrivateRoute path={`/users/:userId/characters/:charId`} component={Character} hasToken={hasToken} />
-          </Switch>
-        </BrowserRouter>
-        
-        <Footer />
+        <Switch>
+          <Route path="/splash" component={Splash} />
+          <Route path="/signup" component={SignupForm} />
+          <Route path="/login" component={LoginForm} />
+
+          <Route path="/generator" component={GeneratorForm} />
+
+          {/* <PrivateRoute path="/" exact={true} component={Footer} hasToken={hasToken} /> */}
+          <PrivateRoute path={"/profile"} component={Profile} hasToken={hasToken} />
+          <PrivateRoute path={`/profile/:id`} component={Profile} hasToken={hasToken} />
+          {/* <PrivateRoute path={"/characters"} component={Character} hasToken={hasToken} /> */}
+          <PrivateRoute path={`/users/:userId/characters`} component={Profile} hasToken={hasToken} />
+          <PrivateRoute path={`/users/:userId/characters/:charId`} component={Character} hasToken={hasToken} />
+        </Switch>
+      </BrowserRouter>
+
+      <Footer />
     </>
 
   )

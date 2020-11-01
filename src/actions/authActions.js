@@ -14,7 +14,7 @@ export const setToken = token => ({ type: SET_TOKEN, token })
 // THUNK ACTION CREATORS
 // Login
 export const login = (username, password) => async dispatch => {
-  const res = await fetch(`${basePath}/token`, {
+  const res = await fetch(`${basePath}/users/token`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username, password })
@@ -27,13 +27,12 @@ export const login = (username, password) => async dispatch => {
       dispatch(setUser(user))
     }
   } else {
-    debugger
     dispatch(setLoginErrors(await res.json()))
   }
 }
 
 export const setLoginErrors = (err) => {
-  console.log("iterable \n\n", err.errors)
+  console.log("iterable", err.errors)
   return {
     type: GET_ERRORS,
     errors: err.errors
@@ -43,7 +42,7 @@ export const setLoginErrors = (err) => {
 // Logout thunk, removes token
 export const logout = () => async (dispatch, getState) => {
   const { authentication: { token } } = getState()
-  const res = await fetch(`${basePath}/token`, {
+  const res = await fetch(`${basePath}/users/token`, {
     method: 'DELETE',
     headers: { Authorization: `Bearer ${token}` }
   })
@@ -57,13 +56,13 @@ export const logout = () => async (dispatch, getState) => {
 export const loadToken = () => async dispatch => {
   const token = localStorage.getItem(TOKEN)
   if (token) {
-    const res = await fetch(`${basePath}/token`, {
+    const res = await fetch(`${basePath}/users/token`, {
       headers: { Authorization: `Bearer ${token}` }
     })
 
     if (res.ok) {
       const user = await res.json()
-      console.log("\n\nuser when token loads?", user)
+      console.log("user when token loads?", user)
       dispatch(setToken(token))
       dispatch(setUser(user))
     }

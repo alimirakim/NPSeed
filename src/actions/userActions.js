@@ -5,7 +5,7 @@ export const MAKE_USER = 'MAKE_USER'
 
 export const makeUser = ({ username, email, password }) => {
   return async dispatch => {
-    const res = await fetch(`${basePath}/users/`, {
+    const res = await fetch(`${basePath}/users`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, email, password })

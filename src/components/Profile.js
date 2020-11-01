@@ -3,8 +3,8 @@ import { useSelector, useDispatch } from 'react-redux'
 // import { Link } from 'react-router-dom'
 import { getUserChars } from '../actions/charActions'
 
-export default function Profile({ match: { params: { userId } } }) {
-  console.log("profile props??", userId)
+export default function Profile(props) {
+  // console.log("profile props??", props)
   const dispatch = useDispatch()
   const user = useSelector(state => state.user)
   // if (!userId) userId = useSelector(state => state.user.id)
