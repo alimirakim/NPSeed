@@ -1,11 +1,18 @@
-import React, { useEffect, useState } from 'react'
-import { Redirect, Link } from 'react-router-dom'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { login } from '../actions/authActions'
-import { UsernameForm, PasswordForm, ErrorsDisplay } from './FormInputs'
+import { Redirect, Link } from 'react-router-dom'
 
+// MATERIAL-UI
 import { makeStyles } from '@material-ui/core/styles'
 import { Paper, Button } from '@material-ui/core'
+
+// MY COMPONENTS
+import { UsernameForm, PasswordForm, ErrorsDisplay } from './FormInputs'
+
+// ACTIONS
+import { login } from '../actions/authActions'
+
+// *****************************************************************************
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -18,27 +25,28 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
+// *****************************************************************************
 
 export default function LoginForm() {
-  const classes = useStyles()
   const dispatch = useDispatch()
-  const [userData, setUserData] = useState({
+  const { token } = useSelector(state => state.authUser)
+  const [loginData, setLoginData] = useState({
     username: "demo",
     password: "password",
   })
+  const classes = useStyles()
 
-  const { token, errors } = useSelector(state => state.authentication)
-  console.log("errors deconstructed\n\n", errors, errors.errors)
+  // console.log("errors deconstructed\n\n", errors, errors.errors)
   
   if (token) return <Redirect to="/" />
 
   const handleSubmit = (ev) => {
     ev.preventDefault()
-    dispatch(login(userData.username, userData.password))
+    dispatch(login(loginData.username, loginData.password))
   }
 
   const handleChange = (property) => (ev) => {
-    setUserData({ ...userData, [property]: ev.target.value })
+    setLoginData({ ...loginData, [property]: ev.target.value })
   }
 
   return (
@@ -49,10 +57,10 @@ export default function LoginForm() {
         <ErrorsDisplay />
 
         <form onSubmit={handleSubmit}>
-          <UsernameForm username={userData.username} handleChange={handleChange} />
+          <UsernameForm username={loginData.username} handleChange={handleChange} />
           <br />
           <br />
-          <PasswordForm password={userData.password} handleChange={handleChange} />
+          <PasswordForm password={loginData.password} handleChange={handleChange} />
           <br />
           <br />
           <Button variant="contained" type="submit">Log-in</Button>

@@ -1,38 +1,54 @@
 import React, { useState } from 'react'
-import { NavLink, Link as RouterLink } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { logout } from '../actions/authActions'
+import { NavLink } from 'react-router-dom'
 
-// Material UI
-import { makeStyles } from '@material-ui/core/styles'
-import { AppBar, Toolbar, Link, Button, IconButton, Typography, Menu, MenuItem, ButtonGroup } from '@material-ui/core'
+// MATERIAL-UI
+import {
+  AppBar,
+  Toolbar,
+  Link,
+  Button,
+  IconButton,
+  Typography,
+  Menu,
+  MenuItem,
+} from '@material-ui/core'
 import { AccountCircle } from '@material-ui/icons'
+import { makeStyles } from '@material-ui/core/styles'
+
+
+// MY COMPONENTS
+
+
+// ACTIONS
+import { deleteUserToken } from '../actions/authActions'
+
+// *****************************************************************************
+
 const useStyles = makeStyles(theme => ({
   root: { flexGrow: 1 },
   menuButton: { marginRight: theme.spacing(2) },
   title: { flexGrow: 1 },
 }))
 
+// *****************************************************************************
 
 export default function Header() {
   const dispatch = useDispatch()
-  // const [open, setOpen] = useState(false)
+  const hasToken = useSelector(state => state.authUser.token ? true : false)
+  const user = useSelector(state => state.authUser.user)
   const [anchor, setAnchor] = useState(null)
-  const hasToken = useSelector(state => state.authentication.token ? true : false)
-  console.log("do we hasToken?\n\n", hasToken)
-  const user = useSelector(state => state.user)
-
+  // const [open, setOpen] = useState(false)
+  console.log("do we hasToken?", hasToken)
   const classes = useStyles()
 
   const handleClick = ev => setAnchor(ev.currentTarget)
 
-  const handleClose = () => {
-    setAnchor(null)
-  }
+  const handleClose = (ev) => setAnchor(null)
 
   const handleLogout = (ev) => {
     setAnchor(null)
-    dispatch(logout())
+    dispatch(deleteUserToken())
   }
 
   // const toggle = () => {
@@ -44,11 +60,12 @@ export default function Header() {
       <Toolbar>
 
         {/* Logo */}
-        <Link component={NavLink} to="/splash" color="secondary">NPSeed</Link>
-
-        {/* Welcome message */}
+        <Typography variant="h6" className={classes.title}>
+          <Link component={NavLink} to="/splash"color="inherit">NPSeed</Link>
+        </Typography>
+          {/* Welcome message */}
         <Typography variant="h6" className={classes.title} hidden={!hasToken}>
-          Hey hey hey, {user.username}!
+          💕 Hey hey hey, {user.username}! 💕
         </Typography>
 
         {/* Account Menu */}
@@ -56,7 +73,7 @@ export default function Header() {
           <IconButton onClick={handleClick}
             className={classes.menuButton} color="inherit"
             aria-label="menu" aria-controls="simple-menu" aria-haspopup="true">
-            <AccountCircle edge="end" />
+            <AccountCircle />
           </IconButton>
 
           <Menu anchorEl={anchor}
@@ -66,15 +83,9 @@ export default function Header() {
           >
             <MenuItem onClick={handleClose}
               component={NavLink}
-              to={{ pathname: "/profile", props: { hasToken } }}
+              to={{ pathname: "/profile" }}
             >
               Profile
-            </MenuItem>
-            <MenuItem onClick={handleClose}
-              component={NavLink}
-              to={{ pathname: "/characters", props: { hasToken } }}
-            >
-              Characters
             </MenuItem>
             <MenuItem onClick={handleLogout}>
               Logout
@@ -84,9 +95,9 @@ export default function Header() {
 
         <div hidden={hasToken}>
           <Button component={NavLink}
-            to={{ pathname: "/signup", state: { hasToken } }}
+            to={{ pathname: "/signup"}}
             variant="contained"
-            hidden={hasToken}
+            color="secondary"
           >
             Sign up
           </Button>
@@ -95,11 +106,12 @@ export default function Header() {
             component={NavLink}
             to="/login"
             color="inherit"
-            hidden={hasToken}
+            variant="outlined"
           >
             Login
           </Button>
         </div>
+        
       </Toolbar>
     </AppBar>
   )

@@ -1,11 +1,24 @@
 import React, { useState } from 'react'
-import {Redirect, Link} from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { makeUser } from '../actions/userActions'
-import { UsernameForm, EmailForm, PasswordForm, ConfirmPasswordForm, ErrorsDisplay } from './FormInputs'
+import {Redirect, Link} from 'react-router-dom'
 
+// MATERIAL-UI
 import {makeStyles} from '@material-ui/core/styles'
 import { Button, Paper } from '@material-ui/core'
+
+// MY COMPONENTS
+import { 
+  UsernameForm, 
+  EmailForm, 
+  PasswordForm, 
+  ConfirmPasswordForm, 
+  ErrorsDisplay 
+} from './FormInputs'
+
+// ACTIONS
+import { makeUser } from '../actions/authActions'
+
+// *****************************************************************************
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -18,33 +31,35 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
+// *****************************************************************************
 
 
 export default function SignUpForm() {
   const classes = useStyles()
   const dispatch = useDispatch()
-  const [userData, setUserData] = useState({
+  const token = useSelector(state => state.authUser.token)
+  const [signupData, setSignupData] = useState({
     username: "",
     email: "",
     password: "password",
     confirmPassword: "password",
   })
 
-  const token = useSelector(state => state.authentication.token)
   if (token) return <Redirect to="/" />
 
   const handleSubmit = (ev) => {
     ev.preventDefault()
-    dispatch(makeUser(userData))
+    console.log("signupData", signupData)
+    dispatch(makeUser(signupData))
     
   }
 
   const handleChange = (property) => (ev) => {
-    setUserData({ ...userData, [property]: ev.target.value })
+    setSignupData({ ...signupData, [property]: ev.target.value })
   }
 
   return (
-    <article id="signup-form" className={classes.root}>
+    <article className={classes.root}>
       <Paper elevation={3}>
       <h2>Sign up</h2>
       
@@ -52,16 +67,16 @@ export default function SignUpForm() {
 
       <form onSubmit={handleSubmit}>
         {/* <input type="hidden" name="_csrf" value={csrfToken} /> */}
-        <UsernameForm username={userData.username} handleChange={handleChange} />
+        <UsernameForm username={signupData.username} handleChange={handleChange} />
         <br/>
         <br/>
-        <EmailForm email={userData.email} handleChange={handleChange} />
+        <EmailForm email={signupData.email} handleChange={handleChange} />
         <br/>
         <br/>
-        <PasswordForm password={userData.password} handleChange={handleChange} />
+        <PasswordForm password={signupData.password} handleChange={handleChange} />
         <br/>
         <br/>
-        <ConfirmPasswordForm confirmPassword={userData.confirmPassword} handleChange={handleChange} />
+        <ConfirmPasswordForm confirmPassword={signupData.confirmPassword} handleChange={handleChange} />
         <br/>
         <br/>
         <Button type="submit" variant="contained">Sign-up</Button>

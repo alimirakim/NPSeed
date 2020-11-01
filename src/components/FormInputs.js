@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import { TextField } from '@material-ui/core'
 
 export function ErrorsDisplay() {
-  const errors = useSelector(state => state.authentication.errors)
+  const errors = useSelector(state => state.errors)
   const [hasErrors, setHasErrors] = useState(false)
   if (errors.length && hasErrors === false) setHasErrors(true)
   return (
@@ -40,7 +40,7 @@ export function EmailForm({ email, handleChange }) {
       type="email"
       onChange={handleChange("email")}
       value={email}
-      placeholder="e-mail"
+      placeholder="e-mail (optional)"
       variant="outlined"
     />
   )
@@ -70,7 +70,6 @@ export function ConfirmPasswordForm({ confirmPassword, handleChange }) {
       value={confirmPassword}
       required
       variant="outlined"
-
     />
   )
 }

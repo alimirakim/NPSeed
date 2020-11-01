@@ -3,7 +3,16 @@ import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { TextField, Typography, Tabs, Tab, Box, Button, ButtonGroup, IconButton } from '@material-ui/core'
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete'
-import { Casino, AddCircle, Cancel, Settings, PieChart, Notes, MorHoriz, Storage } from '@material-ui/icons'
+import { 
+  Casino, 
+  // AddCircle, 
+  // Cancel, 
+  // Settings, 
+  PieChart, 
+  Notes,
+  // MoreHoriz, 
+  // Storage 
+  } from '@material-ui/icons'
 
 const filter = createFilterOptions()
 
@@ -35,14 +44,14 @@ export default function GeneratorForm() {
   const classes = useStyles()
   const [currentTab, setCurrentTab] = useState(0)
   const [fieldValue, setFieldValue] = useState(null)
-  const [charDraft, setCharDraft] = useState({
-    name: "",
-    race: "",
-    age: "",
-    gender: "",
-    culture: "",
-    occupation: "",
-  })
+  // const [charDraft, setCharDraft] = useState({
+  //   name: "",
+  //   race: "",
+  //   age: "",
+  //   gender: "",
+  //   culture: "",
+  //   occupation: "",
+  // })
   
   const handleChange = (ev, value) => {
     setCurrentTab(value)
