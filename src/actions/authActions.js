@@ -6,18 +6,19 @@ export const SET_USER_TOKEN = 'SET_USER_TOKEN'
 export const DELETE_USER_TOKEN = 'DELETE_USER_TOKEN'
 // localStorage Key
 export const TOKEN = 'TOKEN'
+export const USER_ID = 'USER_ID'
 
 /* ACTION CREATORS */
 export const setUserToken = (token, user) => ({ type: SET_USER_TOKEN, token, user })
 export const deleteUserToken = () => {
   localStorage.removeItem(TOKEN)
+  console.log("what")
   return { type: DELETE_USER_TOKEN }
 }
 
 /* THUNK ACTION CREATORS */
 // TODO Try without destructuring
 export const makeUser = (userData) => async dispatch => {
-  console.log("user data?", userData)
   const res = await fetch(`${basePath}/users`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -25,11 +26,15 @@ export const makeUser = (userData) => async dispatch => {
   })
   if (res.ok) {
     const { token, user } = await res.json()
-    if (token) dispatch(setUserToken(token, user)) // check if received token
+    if (token) {
+      localStorage.setItem(TOKEN, token)
+      dispatch(setUserToken(token, user)) // check if received token
+    }
   } else {
     dispatch(setLoginErrors(await res.json()))
   }
 }
+
 
 // Login and store token
 export const login = (username, password) => async dispatch => {
@@ -54,10 +59,13 @@ export const loadToken = () => async dispatch => {
   const token = localStorage.getItem(TOKEN)
   if (token) {
     const res = await fetch(`${basePath}/users/token`, {
-      headers: { Authorization: `Bearer ${token}` }
+      headers: { Authorization: `Bearer ${token}` },
     })
-    const user = await res.json()
-    if (user) dispatch(setUserToken(token, user))
+    // debugger
+    if (res.ok) {
+      const user = await res.json()
+      dispatch(setUserToken(token, user))
+    }
   }
 }
 

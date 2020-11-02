@@ -1,40 +1,74 @@
-import { Link as RouterLink} from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 
-import { Button } from '@material-ui/core'
+// MATERIAL-UI
+import { Button, Typography } from '@material-ui/core'
 
+// MY COMPONENTS
+
+// ACTIONS
 
 export default function Splash() {
+  // TODO Is there any preference if both options are equally readable/convenient
+  // for prop threading or for selecting for these scenarios?
+  const hasToken = useSelector(state => state.authUser.token ? true : false)
+  const steps = [
+    "Choose a randomizer setting.",
+    "Customize any options you'd like, or just leave every NPC trait up to chance.",
+    "Click the button and see your new NPC!"
+  ]
+
   return (
-  <article id="splash">
+    <article>
 
-    <ol>
-      <li>
-        <figure>
-          <img src="/assets/splash-1.png" alt="" />
-          <figcaption>1. Choose which kind of 'random'. 2. Customize options to suit your personal needs. 3. 'Randomize' and save your final character sheet!</figcaption>
-        </figure>
-      </li>
-      <li></li>
-      <li></li>
-    </ol>
+      <article
+        style={{ display: "flex", "flexDirection": "column", "alignItems": "center" }}
+      >
+        <Typography variant="h2" style={{ margin: "4rem 1rem 2rem" }}>Welcome to NPSeed 🌱 </Typography>
+        <ol style={{ display: "flex" }}>
+          {steps.map(step => {
+            return (
+              <li key={steps.indexOf(step)} style={{ width: "30%" }}>
+                <SplashStep step={step} />
+              </li>
+            )
+          })})
+        </ol>
 
-    <Button component={RouterLink} to="/signup" variant="contained">Make an Account</Button>
-    <Button component={RouterLink} to="/login" variant="outlined">Login</Button>
-    <Button component={RouterLink} to="/generator/start" variant="contained" color="secondary" size="large">Start</Button>
-    <small>No account needed to use this generator, but you can save your characters if you sign up!</small>
-  </article>
+        <div style={{ display: "flex", "flexDirection": "column", width: "300px" }}>
+          <Button hidden={hasToken} component={Link} to="/signup" variant="contained">Make an Account</Button>
+          <br />
+          <Button hidden={hasToken} component={Link} to="/login" variant="outlined">Login</Button>
+          <br />
+          <br />
+          <Button component={Link} to="/generator/start"
+            variant="contained" color="secondary" size="large"
+          >
+            Generate Your NPC
+        </Button>
+        </div>
+        <br />
+        <small>No account needed to use this generator, but you can save your characters if you sign up!</small>
+      </article>
+
+      {/* <article hidden={!hasToken}>
+        <Button component={RouterLink} to="/generator/start"
+          variant="contained" color="secondary" size="large"
+        >
+          Go to NPC Generator
+        </Button>
+      </article> */}
+    </article>
   )
 }
 
-function SplashStep() {
+function SplashStep({ step }) {
   return (
-    <li>
-      <figure>
-        <img src="" alt="" />
-        <figcaption>
-          1. Choose a type of random
-    </figcaption>
-      </figure>
-    </li>
+    <figure>
+      <img src="" alt="" style={{ width: "200px", height: "200px" }} />
+      <figcaption>
+        {step}
+      </figcaption>
+    </figure>
   )
 }

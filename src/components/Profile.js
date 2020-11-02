@@ -1,81 +1,97 @@
 import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-// import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+
+// MATERIAL-UI
+import {
+  Typography,
+  Button,
+  IconButton
+} from '@material-ui/core'
+import { List, Edit, Delete } from '@material-ui/icons'
+
+// MY COMPONENTS
+
+// ACTIONS
 import { getUserChars } from '../actions/charActions'
 
+
 export default function Profile(props) {
-  // console.log("profile props??", props)
-  const dispatch = useDispatch()
-  const user = useSelector(state => state.user)
-  // if (!userId) userId = useSelector(state => state.user.id)
-  const chars = useSelector(state => state.characters[user.id])
-  // const user = useSelector(state => state)
-  // if (user.id && !chars) dispatch(getUserChars(user.id))
-
-  useEffect(() => {
-    if (user.id && !chars) dispatch(getUserChars(user.id))
-  }, [dispatch, user.id])
-
-  // debugger
-  if (!chars) return null
-
+  {/* let user; */ }
+  // TODO This will actually need dispatch to work
+  {/* if (props.match.params.id) user = useSelector(state => state.users.props.match.params.id) */ }
+  {/* else user = useSelector(state => state.authUser.user) */ }
+  const user = useSelector(state => state.authUser.user)
+  console.log("type", typeof user.createdAt)
+  user.createdAt = user.createdAt.toLocaleString()
   return (
-    <article id="home">
-      <h2>{user.username}</h2>
+    <article>
+    <br/>
+    <br/>
+      <Typography variant="h1">{user.username}</Typography>
       <small>Joined on {user.createdAt}.</small>
 
       <h2>{user.username}'s Characters</h2>
+
+      <UserCharacters />
+
+    </article>
+  )
+}
+
+function UserCharacters() {
+  const dispatch = useDispatch()
+  const user = useSelector(state => state.authUser.user)
+  const chars = useSelector(state => state.characters.filter(char => char.UserId == user.id))
+  const hasChars = user.Characters.length > 0
+
+  useEffect(() => {
+    if (hasChars && chars.length === 0) dispatch(getUserChars(user.id))
+  }, [])
+
+  if (!chars) return null
+
+  return (
+    <ul style={{ display: "flex", flexWrap: "wrap" }}>
+      {chars.map(char => <li key={char.name} styles={{padding: "1rem"}}><CharCard charId={char.id} /></li>)}
+    </ul>
+  )
+}
+
+function CharCard({ charId }) {
+  const [char] = useSelector(state => state.characters.filter(character => character.id == charId))
+  // const traits = char.traits // should be list
+  return (
+    <article>
+      <h3>{char.name} </h3>
+      <Button component={Link} to={`/${char.id}`} size="small" variant="outlined" color="secondary" style={{ margin: "0.5rem" }}>
+        <small>Full Profile</small>
+      </Button>
+      <br />
+      <img src="/assets/char-icon.png" alt="" style={{ width: "200px", height: "200px" }} />
+      {/* <Link>Campaign "Blankety Blank"</Link> */}
+      <nav>
+        <IconButton color="primary">
+          <List />
+          {/* Expand Details */}
+        </IconButton>
+        <IconButton color="primary">
+          <Edit />
+          {/* Edit NPC */}
+        </IconButton>
+        <IconButton color="secondary">
+          <Delete />
+        </IconButton>
+      </nav>
       <ul>
-        {chars.map(char => {
-          { console.log("trait options??", char.CharTraits) }
-          return (
-            <li>
-              <img src="/assets/char-icon.png" alt={`Character portrait: ${char.name}`} />
-              <a href={`/${char.id}`}>{char.name}</a>
-              {/* <Link>Campaign "Blankety Blank"</Link> */}
-              <nav>
-                <ul>
-                  <li>Essentials
-                    <ul>
-                      {char.CharTraits.map(trait => {
-                        return <li>{trait.Trait.trait.toUpperCase()}: {trait.TraitOption.option} </li>
-                    })}
-                    </ul>
-                  </li>
-                  <li>Appearance
-                    <ul>
-                      <li>Hair: </li>
-                      <li>Eyes: </li>
-                      <li>Skin: </li>
-                      <li>Build: </li>
-                      <li>Attire: </li>
-                      <li>Quirk: </li>
-                    </ul>
-                  </li>
-                  <li>Abilities
-                    <ul>
-                      <li>Level/CR: </li>
-                      <li>Class: </li>
-                      <li>Abilities: </li> {/* Table for scores */}
-                      <li>Proficiencies: </li> {/* Tools, languages, talents */}
-                    </ul>
-                  </li>
-                  <li>Story
-                    <ul>
-                      <li>Residence: </li>
-                      <li>Disposition: </li>
-                      <li>History: </li>
-                    </ul>
-                  </li>
-                </ul>
-                <a href="/{charId}">Expand Details</a>
-                <a href="/{charId}/edit">Edit NPC</a>
-                <a href="/{charId}/delete">Delete NPC</a>
-              </nav>
-            </li>
-          )
-        })
-        }
+        <li>Essentials
+            <ul>
+            {char.traits.map(t => {
+              return <li key={t.traitType}>{t.traitType.toUpperCase()}: {t.trait} </li>
+            })}
+          </ul>
+
+        </li>
       </ul>
     </article>
   )

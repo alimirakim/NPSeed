@@ -26,9 +26,18 @@ import { deleteUserToken } from '../actions/authActions'
 // *****************************************************************************
 
 const useStyles = makeStyles(theme => ({
-  root: { flexGrow: 1 },
-  menuButton: { marginRight: theme.spacing(2) },
-  title: { flexGrow: 1 },
+  root: { 
+    display: 'flex',
+  },
+  menuButton: { 
+    marginRight: theme.spacing(2) 
+  },
+  title: { 
+    flexGrow: 1 
+  },
+  // appBar: {
+  //   zIndex: 1250,
+  // },
 }))
 
 // *****************************************************************************
@@ -56,16 +65,16 @@ export default function Header() {
   // }
 
   return (
-    <AppBar position="static">
+    <AppBar position="fixed" className={classes.appBar} style={{width: "100%", zIndex: "1300"}}>
       <Toolbar>
 
         {/* Logo */}
-        <Typography variant="h6" className={classes.title}>
-          <Link component={NavLink} to="/splash"color="inherit">NPSeed</Link>
+        <Typography variant="h6" className={classes.title} noWrap>
+          <Link component={NavLink} to="/" color="inherit">NPSeed</Link>
         </Typography>
           {/* Welcome message */}
         <Typography variant="h6" className={classes.title} hidden={!hasToken}>
-          💕 Hey hey hey, {user.username}! 💕
+         Welcome back, {user.username}! 
         </Typography>
 
         {/* Account Menu */}
@@ -98,6 +107,7 @@ export default function Header() {
             to={{ pathname: "/signup"}}
             variant="contained"
             color="secondary"
+            style={{margin: "0 1rem"}}
           >
             Sign up
           </Button>

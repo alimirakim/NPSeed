@@ -5,11 +5,14 @@ import { composeWithDevTools } from 'redux-devtools-extension'
 import authUserReducer from './authUserReducer'
 import charactersReducer from './charactersReducer'
 import errorsReducer from './errorsReducer'
-
+import categoriesReducer from './categoriesReducer'
+import settingsReducer from './settingsReducer'
 const rootReducer = combineReducers({
+  errors: errorsReducer,
   authUser: authUserReducer,
   characters: charactersReducer,
-  errors: errorsReducer,
+  categories: categoriesReducer,
+  setting: settingsReducer,
 })
 
 export default function configureStore(preloadedState) {

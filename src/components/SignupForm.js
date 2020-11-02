@@ -65,7 +65,7 @@ export default function SignUpForm() {
       
       <ErrorsDisplay />
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} style={{textAlign: "center"}}>
         {/* <input type="hidden" name="_csrf" value={csrfToken} /> */}
         <UsernameForm username={signupData.username} handleChange={handleChange} />
         <br/>
@@ -79,10 +79,11 @@ export default function SignUpForm() {
         <ConfirmPasswordForm confirmPassword={signupData.confirmPassword} handleChange={handleChange} />
         <br/>
         <br/>
-        <Button type="submit" variant="contained">Sign-up</Button>
-      </form>
+        <Button type="submit" variant="contained" color="secondary" style={{display:"inline-block", padding: "0.5rem 2rem"}}>Sign-up</Button>
+      <br/>
       <br/>
       <small>Have an account? <Link to="/login">Log-in here!</Link></small>
+      </form>
       </Paper>
     </article>
   )
