@@ -7,7 +7,6 @@ export default function errorsReducer(state = [], action) {
       return action.errors
     case DELETE_ERRORS:
       return []
-      
     default:
       return state
   }

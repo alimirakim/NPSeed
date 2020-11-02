@@ -31,7 +31,9 @@ export const makeUser = (userData) => async dispatch => {
       dispatch(setUserToken(token, user)) // check if received token
     }
   } else {
-    dispatch(setLoginErrors(await res.json()))
+    const err = await res.json()
+    console.log("the fuck err", err)
+    dispatch(setLoginErrors(err))
   }
 }
 
@@ -50,9 +52,12 @@ export const login = (username, password) => async dispatch => {
       dispatch(setUserToken(token, user))
     }
   } else {
-    dispatch(setLoginErrors(await res.json()))
+    const err = await res.json()
+    console.log("the fuck err", err)
+    dispatch(setLoginErrors(err))
   }
 }
+
 
 // Load Token to check auth
 export const loadToken = () => async dispatch => {

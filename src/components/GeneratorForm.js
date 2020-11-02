@@ -15,7 +15,7 @@ import TraitDrawer from './TraitDrawer'
 
 // ACTIONS
 import { getTraitsByCategory } from '../actions/traitActions'
-import {clearSettings} from '../actions/settingActions'
+import { clearSettings } from '../actions/settingActions'
 
 // *****************************************************************************
 
@@ -65,9 +65,17 @@ export default function GeneratorForm() {
   const traitTypes3 = traitTypes.filter(type => type.catId == 3)
   const traitTypes4 = traitTypes.filter(type => type.catId == 4)
   const traitTypes5 = traitTypes.filter(type => type.catId == 5)
+  
+  console.log("traitTypes groups", traitTypes1, traitTypes2, traitTypes3, traitTypes4, traitTypes5)
 
   useEffect(() => {
-    if (!traitTypes.length) dispatch(getTraitsByCategory(1))
+    if (!traitTypes.length) {
+      dispatch(getTraitsByCategory(1))
+      dispatch(getTraitsByCategory(3))
+      dispatch(getTraitsByCategory(4))
+      dispatch(getTraitsByCategory(2))
+      dispatch(getTraitsByCategory(5))
+    }
   }, [])
 
   const handleChange = (ev, value) => setCurrentTab(value)
@@ -131,7 +139,7 @@ export default function GeneratorForm() {
             </ol>
           </TabPanel>
 
-          <TabPanel value={currentTab} index={1}>
+          <TabPanel value={currentTab} index={2}>
             <ol>
               {traitTypes3.map(type => {
                 return <li key={type.traitType}><TraitField type={type} setCurrentTraitTypes={setCurrentTraitTypes} /></li>
@@ -139,7 +147,7 @@ export default function GeneratorForm() {
             </ol>
           </TabPanel>
 
-          <TabPanel value={currentTab} index={1}>
+          <TabPanel value={currentTab} index={3}>
             <ol>
               {traitTypes4.map(type => {
                 return <li key={type.traitType}><TraitField type={type} setCurrentTraitTypes={setCurrentTraitTypes} /></li>
@@ -147,7 +155,7 @@ export default function GeneratorForm() {
             </ol>
           </TabPanel>
 
-          <TabPanel value={currentTab} index={1}>
+          <TabPanel value={currentTab} index={4}>
             <ol>
               {traitTypes5.map(type => {
                 return <li key={type.traitType}><TraitField type={type} setCurrentTraitTypes={setCurrentTraitTypes} /></li>
@@ -156,21 +164,21 @@ export default function GeneratorForm() {
           </TabPanel>
         </article>
         <br />
-        <Button variant="contained" color="secondary" size="large" style={{color: "teal", textAlign: "center"}} onClick={makeNpc}>GENERATE NPC</Button>
+        <Button variant="contained" color="secondary" size="large" style={{ color: "teal", textAlign: "center" }} onClick={makeNpc}>GENERATE NPC</Button>
         <br />
         <br />
 
         <div>
-      <Paper elevation={3} color="primary" style={{ width: "50%", padding: "2rem", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center"}}>
-        
-        <h3 hidden={!gotResults} >RANDOM NPC RESULTS!</h3>
-        <ul style={{padding: "0"}}>
-          {npc.map(type => {
-            for (const thing in type) {
-              return <li style={{listStyleType: "none"}}><b>{thing.toUpperCase()}:</b> {type[thing]}</li>
-            }
-          })}
-          </ul>
+          <Paper elevation={3} color="primary" style={{ width: "50%", padding: "2rem", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
+
+            <h3 hidden={!gotResults} >RANDOM NPC RESULTS!</h3>
+            <ul style={{ padding: "0" }}>
+              {npc.map(type => {
+                for (const thing in type) {
+                  return <li style={{ listStyleType: "none" }}><b>{thing.toUpperCase()}:</b> {type[thing]}</li>
+                }
+              })}
+            </ul>
           </Paper>
         </div>
         {/* <Button variant="outlined" color="primary">Skip</Button> */}

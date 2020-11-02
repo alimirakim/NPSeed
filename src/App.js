@@ -88,7 +88,7 @@ function App() {
               <Route path={`/profile/:id`} component={Profile} />
             </Switch>
           </main>
-          <Footer />
+          {/* <Footer /> */}
         </BrowserRouter>
       </ThemeProvider>
     </>

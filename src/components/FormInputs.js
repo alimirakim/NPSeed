@@ -3,6 +3,9 @@ import { useSelector } from 'react-redux'
 import { TextField } from '@material-ui/core'
 
 export function ErrorsDisplay() {
+  
+  // todo useEffect that wipes errors
+  
   const errors = useSelector(state => state.errors)
   const [hasErrors, setHasErrors] = useState(false)
   if (errors.length && hasErrors === false) setHasErrors(true)

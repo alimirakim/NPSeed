@@ -92,9 +92,9 @@ export default function TraitField({ type, setCurrentTraitTypes, open, setOpen }
         )}
       />
 
-      <IconButton color="primary">
-        <PieChart label="View Odds" />
-      </IconButton>
+      {/* <IconButton color="primary"> */}
+        {/* <PieChart label="View Odds" /> */}
+      {/* </IconButton> */}
       <IconButton onClick={getRandomTrait} color="secondary" >
         <Casino label="Randomize" />
       </IconButton>
