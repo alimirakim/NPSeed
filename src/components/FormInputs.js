@@ -1,78 +1,56 @@
-import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
-import { TextField } from '@material-ui/core'
-
-export function ErrorsDisplay() {
-  
-  // todo useEffect that wipes errors
-  
-  const errors = useSelector(state => state.errors)
-  const [hasErrors, setHasErrors] = useState(false)
-  if (errors.length && hasErrors === false) setHasErrors(true)
-  return (
-    <section hidden={!hasErrors}>
-      <h3><strong>Sorry, we got some errors:</strong></h3>
-      <ul>
-        {errors.map((error, i) => {
-          return <li key={i}>{error}</li>
-        })}
-      </ul>
-    </section>
-  )
-}
+import React from 'react'
 
 export function UsernameForm({ username, handleChange }) {
   return (
-    <TextField
-      label="Username"
-      type="text"
-      onChange={handleChange("username")}
-      value={username}
-      placeholder="Username"
-      required
-      variant="outlined"
-      InputLabelProps={{ shrink: true }}
-    />
+    <label>Username
+      <input
+        type="text"
+        onChange={handleChange("username")}
+        value={username}
+        placeholder="Username"
+        required
+      />
+    </label>
   )
 }
 
 export function EmailForm({ email, handleChange }) {
   return (
-    <TextField
-      label="e-mail"
-      type="email"
-      onChange={handleChange("email")}
-      value={email}
-      placeholder="e-mail (optional)"
-      variant="outlined"
-    />
+    <label>e-mail
+      <input
+        type="email"
+        onChange={handleChange("email")}
+        value={email}
+        placeholder="e-mail (optional)"
+      />
+    </label>
   )
 }
 
 export function PasswordForm({ password, handleChange }) {
   return (
-    <TextField
-      label="Password"
-      type="password"
-      onChange={handleChange("password")}
-      placeholder="Password"
-      value={password}
-      required
-      variant="outlined"
-    />
+    <label>Password
+      <input
+        type="password"
+        onChange={handleChange("password")}
+        placeholder="Password"
+        value={password}
+        required
+      />
+    </label>
   )
 }
 
 export function ConfirmPasswordForm({ confirmPassword, handleChange }) {
   return (
-    <TextField
-      label="Confirm Password"
-      type="password"
-      onChange={handleChange("confirmPassword")}
-      placeholder="Confirm Password"
-      value={confirmPassword}
-      required
-      variant="outlined"
-    />
+    <label>
+      <input
+        type="password"
+        required
+        onChange={handleChange("confirmPassword")}
+        value={confirmPassword}
+        placeholder="Confirm Password"
+      />
+    </label>
   )
 }

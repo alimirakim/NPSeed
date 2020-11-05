@@ -3,9 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom'
 
 // MATERIAL-UI
-import { CssBaseline, ThemeProvider } from '@material-ui/core'
-import { createMuiTheme, makeStyles } from '@material-ui/core/styles'
-import { lightGreen, amber } from '@material-ui/core/colors'
+import { CssBaseline } from '@material-ui/core'
 
 // MY COMPONENTS
 import Splash from './components/Splash'
@@ -21,23 +19,6 @@ import { loadToken } from './actions/authActions'
 
 // *****************************************************************************
 
-const theme = createMuiTheme({
-  palette: {
-    primary: lightGreen,
-    secondary: amber,
-  },
-})
-
-const useStyles = makeStyles(theme => ({
-  root: {
-    display: 'flex',
-  },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(3),
-  }
-}))
-
 // TODO I don't get it
 // Function Route Component
 // TODO Why not redirecting?
@@ -46,7 +27,6 @@ function PrivateRoute({ component: Component }) {
   const hasToken = useSelector(state => state.authUser.token ? true : false)
   return (
     <Route render={props => {
-      console.log("what is hasToken", hasToken, props)
       if (hasToken) return <Component {...props} />
       else return <Redirect to="/" />
     }} />
@@ -59,7 +39,6 @@ function App() {
   const dispatch = useDispatch()
   // const hasToken = useSelector(state => state.authUser.token ? true : false)
   const [loaded, setLoaded] = useState(false)
-  const classes = useStyles()
   
   useEffect(() => {
     setLoaded(true)
@@ -72,25 +51,25 @@ function App() {
     <>
       {/* TODO Does this CssBaseline work as a self-closing?? */}
       <CssBaseline />
-      <ThemeProvider theme={theme} >
         <BrowserRouter>
-          <Header className={classes.root} />
+        
+          <Header />
 
-          <main className={classes.content}>
+          <main>
             <Switch>
               <Route path="/" exact={true} component={Splash} />
               <Route path="/signup" component={SignupForm} />
               <Route path="/login" component={LoginForm} />
-
               <Route path="/generator" component={GeneratorForm} />
               {/* TODO The private profile will always be user's, with editing abilities etc. */}
               <PrivateRoute path={"/profile"} exact={true} component={Profile} />
               <Route path={`/profile/:id`} component={Profile} />
             </Switch>
           </main>
-          {/* <Footer /> */}
+          
+          <Footer />
+          
         </BrowserRouter>
-      </ThemeProvider>
     </>
   )
 }

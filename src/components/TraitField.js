@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react'
-import {useDispatch, useSelector} from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 // MATERIAL-UI
-import { TextField, IconButton } from '@material-ui/core'
-import Autocomplete, {createFilterOptions} from '@material-ui/lab/Autocomplete'
+import { TextField } from '@material-ui/core'
+import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete'
 import {
   Notes,
   Casino,
   PieChart,
+  HelpOutline,
 } from '@material-ui/icons'
 // import clsx from 'clsx';
 
@@ -15,26 +16,28 @@ import {
 
 
 // ACTIONS
-import {setSetting} from '../actions/settingActions'
+import { setSetting } from '../actions/settingActions'
+
+// *****************************************************************************
 
 const filter = createFilterOptions()
+
+// *****************************************************************************
 
 export default function TraitField({ type, setCurrentTraitTypes, open, setOpen }) {
   const dispatch = useDispatch()
   const [fieldValue, setFieldValue] = useState(null)
   const setting = useSelector(state => state.setting)
-  
+
   useEffect(() => {
-    if (!setting[type.traitType]) dispatch(setSetting({[type.traitType]: fieldValue}))
-    
+    if (!setting[type.traitType]) dispatch(setSetting({ [type.traitType]: fieldValue }))
+
   }, [])
-    // const classes = useStyles()
-  
+
   const getRandomTrait = (ev) => {
     const i = Math.floor(Math.random() * Math.floor(type.traits.length))
     setFieldValue(type.traits[i])
-    console.log("field value?", type.traits[i], fieldValue)
-    dispatch(setSetting({[type.traitType]: type.traits[i]}))
+    dispatch(setSetting({ [type.traitType]: type.traits[i] }))
     // ev.target.color = "primary"
     // TODO Double-check for off-by-one bugs
   }
@@ -50,8 +53,13 @@ export default function TraitField({ type, setCurrentTraitTypes, open, setOpen }
 
       <Autocomplete
         value={fieldValue}
+        options={type.traits}
+        selectOnFocus
+        clearOnBlur
+        handleHomeEndKeys
+        freeSolo
 
-        onChange={(event, newValue) => {
+        onChange={(ev, newValue) => {
           if (typeof newValue === 'string') {
             setFieldValue(newValue)
           } else if (newValue && newValue.inputValue) {
@@ -63,18 +71,12 @@ export default function TraitField({ type, setCurrentTraitTypes, open, setOpen }
 
         filterOptions={(options, params) => {
           const filtered = filter(options, params)
-          // Suggest creating new value
           if (params.inputValue !== "") {
             filtered.unshift(`(Free Choice) ${params.inputValue}`
             )
           }
           return filtered
         }}
-
-        selectOnFocus
-        clearOnBlur
-        handleHomeEndKeys
-        options={type.traits}
 
         getOptionLabel={(type) => {
           if (typeof type === 'string') return type
@@ -84,24 +86,36 @@ export default function TraitField({ type, setCurrentTraitTypes, open, setOpen }
 
         renderOption={trait => trait}
 
-        style={{ width: 300, }}
-        freeSolo
-
         renderInput={(params) => (
           <TextField {...params} placeholder="Leave it to chance!" variant="outlined" color="primary" />
         )}
       />
 
-      {/* <IconButton color="primary"> */}
-        {/* <PieChart label="View Odds" /> */}
-      {/* </IconButton> */}
-      <IconButton onClick={getRandomTrait} color="secondary" >
-        <Casino label="Randomize" />
-      </IconButton>
-      <IconButton onClick={showAllTraits} color="primary">
-         {/* aria-label="open drawer" className={clsx(open && classes.hide)}> */}
-        <Notes label="See all" />
-      </IconButton>
+      <nav>
+        <ul>
+          <li>
+            <label>View Odds<button>
+              <PieChart />
+            </button></label>
+          </li>
+          <li>
+            <label>Randomize<button onClick={getRandomTrait}>
+              <Casino />
+            </button></label>
+          </li>
+          <li>
+            <label>See All Traits<button onClick={showAllTraits}>
+              {/* aria-label="open drawer" className={clsx(open && classes.hide)}> */}
+              <Notes />
+            </button></label>
+          </li>
+          <li>
+            <label>Details<button>
+              <HelpOutline />
+            </button></label>
+          </li>
+        </ul>
+      </nav>
     </>
   )
 }

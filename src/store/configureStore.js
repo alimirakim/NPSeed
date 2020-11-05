@@ -7,12 +7,15 @@ import charactersReducer from './charactersReducer'
 import errorsReducer from './errorsReducer'
 import categoriesReducer from './categoriesReducer'
 import settingsReducer from './settingsReducer'
+import generatorReducer from './generatorReducer'
+
 const rootReducer = combineReducers({
   errors: errorsReducer,
   authUser: authUserReducer,
   characters: charactersReducer,
   categories: categoriesReducer,
   setting: settingsReducer,
+  generator: generatorReducer,
 })
 
 export default function configureStore(preloadedState) {

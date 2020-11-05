@@ -2,28 +2,14 @@ import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Redirect, Link } from 'react-router-dom'
 
-// MATERIAL-UI
-import { makeStyles } from '@material-ui/core/styles'
-import { Paper, Button } from '@material-ui/core'
-
 // MY COMPONENTS
-import { UsernameForm, PasswordForm, ErrorsDisplay } from './FormInputs'
+import { UsernameForm, PasswordForm } from './FormInputs'
+import ErrorsDisplay from './ErrorsDisplay'
 
 // ACTIONS
 import { login } from '../actions/authActions'
 
 // *****************************************************************************
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    '& > *': {
-      padding: theme.spacing(4, 10),
-      margin: theme.spacing(4, 'auto'),
-    },
-  },
-}))
 
 // *****************************************************************************
 
@@ -34,7 +20,6 @@ export default function LoginForm() {
     username: "demo",
     password: "password",
   })
-  const classes = useStyles()
 
   // console.log("errors deconstructed\n\n", errors, errors.errors)
   
@@ -50,24 +35,17 @@ export default function LoginForm() {
   }
 
   return (
-      <article id="login" className={classes.root}>
-      <Paper elevation={3}>
+      <article>
         <h2>Log-in</h2>
         
         <ErrorsDisplay />
 
         <form onSubmit={handleSubmit}>
           <UsernameForm username={loginData.username} handleChange={handleChange} />
-          <br />
-          <br />
           <PasswordForm password={loginData.password} handleChange={handleChange} />
-          <br />
-          <br />
-          <Button variant="contained" type="submit">Log-in</Button>
+          <button>Log-in</button>
         </form>
-        <br />
         <small>Need an account? <Link to="/signup">Sign-up here!</Link></small>
-        </Paper>
       </article>
   )
 }
