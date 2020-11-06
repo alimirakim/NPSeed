@@ -37,7 +37,7 @@ export default function Splash() {
   const hasToken = useSelector(state => state.authUser.token ? true : false)
   const user = useSelector(state => state.authUser.user)
   // const settings = useSelector(state => state.settings)
-  const [settings, setSettings] = useState({})
+  const [settings, setSettings] = useState([])
   const generator = useSelector(state => state.generator)
   const traitTypes = useSelector(state => {
     const allTraitTypes = []
@@ -53,14 +53,14 @@ export default function Splash() {
   }, [])
 
   if (Object.keys(settings).length === 0 && traitTypes.length > 0) {
-    const settingDefaults = {}
-    for (const t of traitTypes) {
-      settingDefaults[t.type] = ""
-    }
-    // const traitTypesList = traitTypes.map(t => {
-      // return { [t.type]: "" }
+    // const settingDefaults = {}
+    // traitTypes.map(t => {
+    //   settingDefaults[t.type] = ""
     // })
-    setSettings(settingDefaults)
+    const traitTypesList = traitTypes.map(t => {
+      return { id: t.id, type: t.type, trait: "" }
+    })
+    setSettings(traitTypesList)
   }
 
   // const updateChances = (genId) => (ev) => {
@@ -69,17 +69,22 @@ export default function Splash() {
 
   const handleSubmit = (ev) => {
     ev.preventDefault()
-    setSettings({...settings, ["Name"]: nameVal})
+    // console.log("event stuff", ev.target.name, "event value", ev.target.value)
+    setSettings([...settings, "Name": nameVal])
+    // setSettings({...settings, "Name": nameVal})
     console.log(settings)
   }
+  
+  const handleChange = (ev) => {
+    setSettings([...settings, ])
+  }
+  
   const handleName = (ev) => {
     setNameVal(ev.target.value)
   }
-  
-  
   const randomizeNpc = () => {
     dispatch(setTraits(nameVal))
-    
+
 
   }
 
@@ -110,9 +115,22 @@ export default function Splash() {
       {/* <button onClick={updateChances(2)}>Earth Random Generator</button> */}
 
       <form onSubmit={handleSubmit}>
+        {traitTypes.map(traitType => {
+          return (
+            <li key={traitType.id}>
+              <label>{traitType.type}
+                <input name={traitType.type} type="text" value={settings[traitType.id]} onChange={handleChange} />
+              </label>
+            </li>
+          )
+        })}
+      
         <label>Name
-        <input type="text" value={nameVal} onChange={handleName} />
+          <input name="Name" type="text" value={nameVal} onChange={handleChange} />
         </label><br />
+        <label>Age
+          <input name="Age" type="text" value={ageVal} onChange={changeChange} />
+        </label>
         <button>Submit</button>
       </form>
       <button onClick={randomizeNpc}>Try it out!</button>
@@ -120,7 +138,9 @@ export default function Splash() {
       <article>
         <h3>Random NPC</h3>
         {
-
+          settings.map(setting => {
+            return <li key={setting.id}><b>{setting.type}:</b> {setting.trait}</li>
+          })
         }
       </article>
 
@@ -131,7 +151,7 @@ export default function Splash() {
 }
 
 
-
+// state.categories[0].traitTypes[0].current
 
 // state 'categories' change to 'traits'
 // {catId, traitType, traitsList, current}

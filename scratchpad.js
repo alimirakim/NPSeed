@@ -1,3 +1,73 @@
+import { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import {getAllTraits} from '../actions/traitActions'
+
+
+
+
+function NpcGenerator() {
+  const categories = useSelector(state => state.categories)
+  const [settings, setSettings] = useState({})
+  
+  useEffect(() => {
+    if (!categories.length) {
+      dispatch(getAllTraits())
+    }
+  })
+  
+  if (!categories.length) return null
+  const defaultSettings = {}
+  categories.map(c => {
+    defaultSettings[c.category] = c.traitTypes.map(t => {
+      c[t.type] = ""
+    })
+  })
+  setSettings(defaultSettings)
+  
+  return (
+    <>
+      <form onSubmit={handlSubmit}>
+        {categories.map(c => {
+          <p><b>Category:</b> {c.category}</p>
+            {c.traitTypes.map(t => {
+              <label>{t.type}
+                <input type="text" value={settings[c].type} onChange={handleChange} />
+              </label>
+            })}
+        })}
+        <button>Submit</button>
+      </form>
+
+      <article id="npc-display">
+        {categories.map(c => {
+          <p><b>Category:</b> {c.category}</p>
+            {c.traitTypes.map(t => {
+              <p><b>{t.type}:</b> {}</p>
+            })}
+        })}
+      </article>
+    </>
+  )
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // Below section is for mapping and generating chances for tag types
@@ -25,7 +95,7 @@ const colorHueChances = [
     id: 2,
     tag: 'fantasy',
     chance: 7,
-  }, 
+  },
 ]
 const hairChances = [colorValueChances, colorHueChances]
 
@@ -75,7 +145,7 @@ function mapAndRollTagChances(allChances) {
 
 function rollForQuirkChance(tagType) {
   const rand = Math.random()
-  const isQuirky = (rand > tagType.quirkChance )
+  const isQuirky = (rand > tagType.quirkChance)
   return isQuirky
 }
 
@@ -100,10 +170,10 @@ function randomizeTraits(traitTypes) {
     const i = Math.floor(Math.random() * Math.floor(traitType.traits.length))
     return traitType.traits[i]
     // { 
-      // id: traitType.id,
-      // traitType: traitType.type,
-      // trait: traitType.traits[i], 
-        // {id: 1, trait: 'eliza', tags: [{id: 1, tag: 'blah'}]}
+    // id: traitType.id,
+    // traitType: traitType.type,
+    // trait: traitType.traits[i], 
+    // {id: 1, trait: 'eliza', tags: [{id: 1, tag: 'blah'}]}
     // }
   })
   return traits
