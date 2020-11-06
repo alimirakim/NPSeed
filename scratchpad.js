@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import {getAllTraits} from '../actions/traitActions'
+import { getAllTraits } from '../actions/traitActions'
 
 
 
@@ -8,32 +8,44 @@ import {getAllTraits} from '../actions/traitActions'
 function NpcGenerator() {
   const categories = useSelector(state => state.categories)
   const [settings, setSettings] = useState({})
-  
+
   useEffect(() => {
     if (!categories.length) {
       dispatch(getAllTraits())
     }
   })
-  
+
   if (!categories.length) return null
+
+  const handleChange = (ev) => {
+    setSettings({ ...settings, [ev.target.name]: ev.target.value })
+  }
+
+  const handleSubmit = (ev) => {
+    ev.preventDefault()
+
+  }
+
   const defaultSettings = {}
-  categories.map(c => {
-    defaultSettings[c.category] = c.traitTypes.map(t => {
-      c[t.type] = ""
-    })
-  })
+  for (c in categories) {
+    defaultSettings[c.category] = {}
+    for (t in c.traitTypes) {
+      defaultSettings[c.category][t.type] = ""
+    }
+  }
   setSettings(defaultSettings)
-  
+
   return (
     <>
       <form onSubmit={handlSubmit}>
         {categories.map(c => {
           <p><b>Category:</b> {c.category}</p>
-            {c.traitTypes.map(t => {
+          {c.traitTypes.map(t => {
               <label>{t.type}
-                <input type="text" value={settings[c].type} onChange={handleChange} />
+                <input name={t.type} type="text" value={settings[c].type} onChange={handleChange} />
               </label>
-            })}
+            })
+          }
         })}
         <button>Submit</button>
       </form>
@@ -41,15 +53,15 @@ function NpcGenerator() {
       <article id="npc-display">
         {categories.map(c => {
           <p><b>Category:</b> {c.category}</p>
-            {c.traitTypes.map(t => {
+          {
+            c.traitTypes.map(t => {
               <p><b>{t.type}:</b> {}</p>
-            })}
+            })
+          }
         })}
       </article>
     </>
   )
-
-
 }
 
 
