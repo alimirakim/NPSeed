@@ -1,4 +1,4 @@
-import { useReducer, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 
@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom'
 // ACTIONS
 import { SET_CHANCES, getAllTraits, setTraits } from '../actions/traitActions'
 import { setSettings, updateSetting, } from '../actions/settingActions'
+import { getGenerator } from '../actions/genActions'
 import TraitField from './TraitField'
 
 // *****************************************************************************
@@ -36,23 +37,43 @@ export default function Splash() {
   const dispatch = useDispatch()
   const categories = useSelector(state => state.categories)
   const settings = useSelector(state => state.setting)
+  const generator = useSelector(state => state.generator)
+  const [gotResults, setGotResults] = useState(false)
+  const [fieldValues, setFieldValues] = useState({})
 
   useEffect(() => {
     if (!categories.length) {
       dispatch(getAllTraits())
     } else {
+      dispatch(getGenerator(2))
       dispatch(setSettings(categories))
     }
   }, [categories])
-  // debugger
 
   const handleChange = (ev) => {
+    console.log("test?")
+    console.log({ type: ev.target.name, trait: ev.target.value })
     dispatch(updateSetting({ type: ev.target.name, trait: ev.target.value }))
+    setFieldValues({ ...fieldValues, [ev.target.name]: ev.target.value })
   }
 
   const handleSubmit = (ev) => {
     ev.preventDefault()
-    
+    console.log("field values?", fieldValues)
+    categories.map(c => {
+      c.traitTypes.map(t => {
+        // if (settings[t.type]) {
+        if (fieldValues[t.type]) {
+          return { [t.type]: settings[t.type] }
+        } else if (t.traits.length === 0) {
+          return { [t.type]: "" }
+        } else {
+          const i = Math.floor(Math.random() * Math.floor(t.traits.length))
+          dispatch(updateSetting({ type: t.type, trait: t.traits[i].trait }))
+        }
+      })
+    })
+    setGotResults(true)
   }
 
   if (!categories.length || !Object.keys(settings).length) return null
@@ -68,8 +89,7 @@ export default function Splash() {
               <>
                 <br />
                 <label>{t.type}:
-                <TraitField traitType={t} handleChange={handleChange} />
-                <input name={t.type} type="text" onChange={handleChange} />
+                <TraitField traitType={t} handleChange={handleChange} fieldValues={fieldValues} setFieldValues={setFieldValues} />
                 </label>
               </>
             ))}
@@ -85,8 +105,8 @@ export default function Splash() {
           <>
             <h3><b>Category:</b> {c.category}</h3>
             {c.traitTypes.map(t => {
-              {/* console.log("this is...", settings[c.category]) */}
-              {/* console.log("this T is...", t.type) */}
+              {/* console.log("this is...", settings[c.category]) */ }
+              {/* console.log("this T is...", t.type) */ }
               return (
                 <div><b>{t.type}:</b> {settings[t.type]}</div>
               )

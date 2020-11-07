@@ -20,12 +20,9 @@ export const getTraitsByCategory = (catId) => async (dispatch) => {
 }
 
 export const getAllTraits = () => async (dispatch) => {
-  debugger
   const res = await fetch(`${basePath}/categories/traitTypes`)
   if (res.ok) {
-    debugger
     const categories = await res.json()
-    debugger
     dispatch(setTraits(categories))
 
   }
