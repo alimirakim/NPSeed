@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useReducer, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 
@@ -30,125 +30,83 @@ import { SET_CHANCES, getAllTraits, setTraits } from '../actions/traitActions'
 
 // *****************************************************************************
 
+function settingReducer(state, action) {
+  debugger
+  switch (action.type) {
+    case 'update_settings':
+      debugger
+      const newState = { ...state, ...action.traitTypes }
+      debugger
+      return newState
+  }
+}
+
 export default function Splash() {
-  // TODO Is there any preference if both options are equally readable/convenient
-  // for prop threading or for selecting for these scenarios?
-  const dispatch = useDispatch()
-  const hasToken = useSelector(state => state.authUser.token ? true : false)
-  const user = useSelector(state => state.authUser.user)
-  // const settings = useSelector(state => state.settings)
-  const [settings, setSettings] = useState([])
-  const generator = useSelector(state => state.generator)
-  const traitTypes = useSelector(state => {
-    const allTraitTypes = []
-    for (let category of state.categories) {
-      allTraitTypes.push(...category.traitTypes)
-    }
-    return allTraitTypes
-  })
-  const [nameVal, setNameVal] = useState("")
+  // const dispatch = useDispatch()
+  const categories = useSelector(state => state.categories)
 
   useEffect(() => {
-    if (!traitTypes.length) dispatch(getAllTraits())
+    if (!categories.length) {
+      dispatch(getAllTraits())
+    }
   }, [])
+  // debugger
 
-  if (Object.keys(settings).length === 0 && traitTypes.length > 0) {
-    // const settingDefaults = {}
-    // traitTypes.map(t => {
-    //   settingDefaults[t.type] = ""
-    // })
-    const traitTypesList = traitTypes.map(t => {
-      return { id: t.id, type: t.type, trait: "" }
-    })
-    setSettings(traitTypesList)
+  const handleChange = (ev) => {
+    // setSettings({ ...settings, [ev.target.name]: ev.target.value })
   }
-
-  // const updateChances = (genId) => (ev) => {
-  //   dispatch(getChances(genId))
-  // }
 
   const handleSubmit = (ev) => {
     ev.preventDefault()
-    // console.log("event stuff", ev.target.name, "event value", ev.target.value)
-    setSettings([...settings, "Name": nameVal])
-    // setSettings({...settings, "Name": nameVal})
-    console.log(settings)
+
   }
   
-  const handleChange = (ev) => {
-    setSettings([...settings, ])
+  const defaultSettings = {}
+  for (const c of categories) {
+    debugger
+    defaultSettings[c.category] = {}
+    for (const t of c.traitTypes) {
+      defaultSettings[c.category][t.type] = ""
+    }
   }
+  let [settings, dispatch] = useReducer(settingReducer, defaultSettings)
+  // dispatch({type: 'update_settings', traitTypes: defaultSettings})
+  debugger
+  console.log("settings", settings)
   
-  const handleName = (ev) => {
-    setNameVal(ev.target.value)
-  }
-  const randomizeNpc = () => {
-    dispatch(setTraits(nameVal))
+  if (!categories.length) return null
 
-
-  }
-
-  // {id: 1, genId: 1, tag: 'small', tagType: 'size', chance: 0.30}
-  // const setChances = (chances) => ({type: SET_CHANCES, chances})
-  // const getChances = (genId) => async (dispatch) => {
-  //   const chances = await fetch(`/generator/${genId}/chances`)
-  //   dispatch(setChances(chances))
-  // }
 
   return (
-    <article>
-      {/* <h1>Welcome to NPSeed 🌱</h1>
-        <ol style={{ display: "flex" }}>
-          {steps.map(step => {
-            return (
-              <li key={steps.indexOf(step)} style={{ width: "30%" }}>
-                <SplashStep step={step} />
-              </li>
-            )
-          })}
-        </ol>
-
-          <Link to="/signup" hidden={hasToken}>Make an Account</Link>
-          <Link to="/login" hidden={hasToken}>Login</Link> */}
-
-      {/* <button onClick={updateChances(1)}>True Random Generator</button> */}
-      {/* <button onClick={updateChances(2)}>Earth Random Generator</button> */}
-
+    <>
       <form onSubmit={handleSubmit}>
-        {traitTypes.map(traitType => {
-          return (
-            <li key={traitType.id}>
-              <label>{traitType.type}
-                <input name={traitType.type} type="text" value={settings[traitType.id]} onChange={handleChange} />
+        {categories.map(c => {
+          <p><b>Category:</b> {c.category}</p>
+          { c.traitTypes.map(t => {
+              { console.log("c", c) }
+              <label>{t.type}
+                <input name={t.type} type="text" value={settings[c][t.type]} onChange={handleChange} />
               </label>
-            </li>
-          )
+            })
+          }
         })}
-      
-        <label>Name
-          <input name="Name" type="text" value={nameVal} onChange={handleChange} />
-        </label><br />
-        <label>Age
-          <input name="Age" type="text" value={ageVal} onChange={changeChange} />
-        </label>
         <button>Submit</button>
       </form>
-      <button onClick={randomizeNpc}>Try it out!</button>
 
-      <article>
-        <h3>Random NPC</h3>
-        {
-          settings.map(setting => {
-            return <li key={setting.id}><b>{setting.type}:</b> {setting.trait}</li>
-          })
-        }
+      <article id="npc-display">
+        {categories.map(c => {
+          <p><b>Category:</b> {c.category}</p>
+          {
+            c.traitTypes.map(t => {
+              <p><b>{t.type}:</b> {}</p>
+            })
+          }
+        })}
       </article>
-
-      {/* <Link to="/generator">Generate Your NPC</Link> */}
-      {/* <small hidden={hasToken}>No account needed to use this generator, but you can save your characters if you sign up!</small> */}
-    </article>
+    </>
   )
 }
+
 
 
 // state.categories[0].traitTypes[0].current
