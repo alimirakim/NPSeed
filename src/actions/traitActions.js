@@ -10,7 +10,6 @@ export const SET_CHANCES = 'SET_CHANCES'
 // ACTION CREATORS
 export const setTraits = (traits) => ({ type: GET_TRAITS, traits })
 
-
 // THUNK ACTION CREATORS
 export const getTraitsByCategory = (catId) => async (dispatch) => {
   const res = await fetch(`${basePath}/categories/${catId}`)
@@ -21,9 +20,13 @@ export const getTraitsByCategory = (catId) => async (dispatch) => {
 }
 
 export const getAllTraits = () => async (dispatch) => {
+  debugger
   const res = await fetch(`${basePath}/categories/traitTypes`)
   if (res.ok) {
-    const traits = await res.json()
-    dispatch(setTraits(traits))
+    debugger
+    const categories = await res.json()
+    debugger
+    dispatch(setTraits(categories))
+
   }
 }

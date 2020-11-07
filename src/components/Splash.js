@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom'
 
 // ACTIONS
 import { SET_CHANCES, getAllTraits, setTraits } from '../actions/traitActions'
-// import {setAllTraits} from '../actions/settingActions'
+import { setSettings, updateSetting, } from '../actions/settingActions'
 
 // *****************************************************************************
 
@@ -30,78 +30,76 @@ import { SET_CHANCES, getAllTraits, setTraits } from '../actions/traitActions'
 
 // *****************************************************************************
 
-function settingReducer(state, action) {
-  debugger
-  switch (action.type) {
-    case 'update_settings':
-      debugger
-      const newState = { ...state, ...action.traitTypes }
-      debugger
-      return newState
-  }
-}
 
 export default function Splash() {
-  // const dispatch = useDispatch()
+  const dispatch = useDispatch()
   const categories = useSelector(state => state.categories)
+  const settings = useSelector(state => state.setting)
 
   useEffect(() => {
     if (!categories.length) {
       dispatch(getAllTraits())
+    } else {
+      dispatch(setSettings(categories))
     }
-  }, [])
+  }, [categories])
   // debugger
 
   const handleChange = (ev) => {
-    // setSettings({ ...settings, [ev.target.name]: ev.target.value })
+    console.log("name and value", ev.target.name, ev.target.value)
+    dispatch(updateSetting({ type: ev.target.name, trait: ev.target.value }))
+    console.log("did the settings update???", settings.Name)
   }
 
   const handleSubmit = (ev) => {
     ev.preventDefault()
 
   }
-  
-  const defaultSettings = {}
-  for (const c of categories) {
-    debugger
-    defaultSettings[c.category] = {}
-    for (const t of c.traitTypes) {
-      defaultSettings[c.category][t.type] = ""
-    }
-  }
-  let [settings, dispatch] = useReducer(settingReducer, defaultSettings)
-  // dispatch({type: 'update_settings', traitTypes: defaultSettings})
+
+  if (!categories.length || !Object.keys(settings).length) return null
+
+
+
+  console.log("settings wtf", settings)
+  // console.log(settings[categories[0].category])
   debugger
-  console.log("settings", settings)
-  
-  if (!categories.length) return null
 
 
   return (
     <>
       <form onSubmit={handleSubmit}>
-        {categories.map(c => {
-          <p><b>Category:</b> {c.category}</p>
-          { c.traitTypes.map(t => {
-              { console.log("c", c) }
-              <label>{t.type}
-                <input name={t.type} type="text" value={settings[c][t.type]} onChange={handleChange} />
-              </label>
-            })
-          }
-        })}
+        <h2>Customize Options</h2>
+        {categories.map(c => (
+          <>
+            <h3><b>Category:</b> {c.category}</h3>
+            {c.traitTypes.map(t => (
+              <>
+                <br />
+                <label>{t.type}:
+                <input name={t.type} type="text" onChange={handleChange} />
+                </label>
+              </>
+            ))}
+          </>
+        ))}
+        <br />
         <button>Submit</button>
       </form>
 
       <article id="npc-display">
-        {categories.map(c => {
-          <p><b>Category:</b> {c.category}</p>
-          {
-            c.traitTypes.map(t => {
-              <p><b>{t.type}:</b> {}</p>
-            })
-          }
-        })}
+        <h2>NPC Results</h2>
+        {categories.map(c => (
+          <>
+            <h3><b>Category:</b> {c.category}</h3>
+            {c.traitTypes.map(t => {
+              {/* console.log("this is...", settings[c.category]) */}
+              {/* console.log("this T is...", t.type) */}
+              return (
+                <div><b>{t.type}:</b> {settings[t.type]}</div>
+              )
+            })}
+          </>
+        ))}
       </article>
     </>
   )
