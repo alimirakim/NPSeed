@@ -22,9 +22,105 @@ import { setSetting } from '../actions/settingActions'
 
 const filter = createFilterOptions()
 
+
+
+
+
+
+export default function TraitField({ traitType, handleChange }) {
+  const dispatch = useDispatch()
+  const [fieldValue, setFieldValue] = useState(null)
+  // const setting = useSelector(state => state.setting)
+
+  // useEffect(() => {
+  //   if (!setting[type.traitType]) dispatch(setSetting({ [type.traitType]: fieldValue }))
+
+  // }, [])
+
+  const getRandomTrait = (ev) => {
+    const i = Math.floor(Math.random() * Math.floor(traitType.traits.length))
+    setFieldValue(traitType.traits[i])
+    dispatch(setSetting({ [traitType.type]: traitType.traits[i] }))
+    // ev.target.color = "primary"
+    // TODO Double-check for off-by-one bugs
+  }
+
+  return (
+    <>
+      <h3>{traitType.type.toUpperCase()}</h3>
+
+      <Autocomplete
+        value={fieldValue}
+        options={traitType.traits}
+        selectOnFocus
+        clearOnBlur
+        handleHomeEndKeys
+        freeSolo
+
+        onChange={(ev, newValue) => {
+          if (typeof newValue === 'string') {
+            setFieldValue(newValue)
+          } else if (newValue && newValue.inputValue) {
+            setFieldValue(newValue.inputValue)
+          } else {
+            setFieldValue(newValue)
+          }
+        }}
+
+        filterOptions={(options, params) => {
+          const filtered = filter(options, params)
+          if (params.inputValue !== "") {
+            filtered.unshift(`(Free Choice) ${params.inputValue}`
+            )
+          }
+          return filtered
+        }}
+
+        getOptionLabel={(t) => {
+          if (typeof t === 'string') return t
+          if (t.inputValue) return t.inputValue
+          return t.trait
+        }}
+
+        renderOption={t => t.trait}
+
+        renderInput={(params) => (
+          <TextField {...params} placeholder="Leave it to chance!" variant="outlined" color="primary" />
+        )}
+      />
+
+      <nav>
+        <ul>
+          <li>
+            <label>View Odds<button>
+              <PieChart />
+            </button></label>
+          </li>
+          <li>
+            <label>Randomize<button onClick={getRandomTrait}>
+              <Casino />
+            </button></label>
+          </li>
+          <li>
+            <label>See All Traits<button>
+              <Notes />
+            </button></label>
+          </li>
+          <li>
+            <label>Details<button>
+              <HelpOutline />
+            </button></label>
+          </li>
+        </ul>
+      </nav>
+    </>
+  )
+}
+
+
 // *****************************************************************************
 
-export default function TraitField({ type, setCurrentTraitTypes, open, setOpen }) {
+export function TraitFielddd({ type, setCurrentTraitTypes, open, setOpen }) {
   const dispatch = useDispatch()
   const [fieldValue, setFieldValue] = useState(null)
   const setting = useSelector(state => state.setting)

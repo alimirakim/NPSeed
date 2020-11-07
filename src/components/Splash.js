@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom'
 // ACTIONS
 import { SET_CHANCES, getAllTraits, setTraits } from '../actions/traitActions'
 import { setSettings, updateSetting, } from '../actions/settingActions'
+import TraitField from './TraitField'
 
 // *****************************************************************************
 
@@ -46,24 +47,15 @@ export default function Splash() {
   // debugger
 
   const handleChange = (ev) => {
-    console.log("name and value", ev.target.name, ev.target.value)
     dispatch(updateSetting({ type: ev.target.name, trait: ev.target.value }))
-    console.log("did the settings update???", settings.Name)
   }
 
   const handleSubmit = (ev) => {
     ev.preventDefault()
-
+    
   }
 
   if (!categories.length || !Object.keys(settings).length) return null
-
-
-
-  console.log("settings wtf", settings)
-  // console.log(settings[categories[0].category])
-  debugger
-
 
   return (
     <>
@@ -76,6 +68,7 @@ export default function Splash() {
               <>
                 <br />
                 <label>{t.type}:
+                <TraitField traitType={t} handleChange={handleChange} />
                 <input name={t.type} type="text" onChange={handleChange} />
                 </label>
               </>
