@@ -85,6 +85,9 @@ export const currentGen = {
     quirkChance: 0.01,
     tagChances: [{
       id: 1,
+      GeneratorId: 1,
+      TagTypeId: 1,
+      TagId: 1,
       tag: { id: 1, tag: "girly" },
       chance: 0.45,
     }]

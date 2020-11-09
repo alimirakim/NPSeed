@@ -8,6 +8,7 @@ import errorsReducer from './errorsReducer'
 import categoriesReducer from './categoriesReducer'
 import settingsReducer from './settingsReducer'
 import generatorReducer from './generatorReducer'
+import genSettingsReducer from './genSettingsReducer'
 
 const rootReducer = combineReducers({
   errors: errorsReducer,
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
   categories: categoriesReducer,
   setting: settingsReducer,
   generator: generatorReducer,
+  genSettings: genSettingsReducer,
 })
 
 export default function configureStore(preloadedState) {

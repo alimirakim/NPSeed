@@ -1,84 +1,42 @@
-import { useState, useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { getAllTraits } from '../actions/traitActions'
+const { Step } = require("@material-ui/core")
 
 
 
 
-function NpcGenerator() {
-  const categories = useSelector(state => state.categories)
-  const [settings, setSettings] = useState({})
 
-  useEffect(() => {
-    if (!categories.length) {
-      dispatch(getAllTraits())
-    }
-  })
 
-  if (!categories.length) return null
 
-  const handleChange = (ev) => {
-    setSettings({ ...settings, [ev.target.name]: ev.target.value })
-  }
-
-  const handleSubmit = (ev) => {
-    ev.preventDefault()
-
-  }
-
-  const defaultSettings = {}
-  for (c in categories) {
-    defaultSettings[c.category] = {}
-    for (t in c.traitTypes) {
-      defaultSettings[c.category][t.type] = ""
-    }
-  }
-  setSettings(defaultSettings)
-
-  return (
-    <>
-      <form onSubmit={handlSubmit}>
-        {categories.map(c => {
-          <p><b>Category:</b> {c.category}</p>
-          {c.traitTypes.map(t => {
-              <label>{t.type}
-                <input name={t.type} type="text" value={settings[c].type} onChange={handleChange} />
-              </label>
-            })
-          }
-        })}
-        <button>Submit</button>
-      </form>
-
-      <article id="npc-display">
-        {categories.map(c => {
-          <p><b>Category:</b> {c.category}</p>
-          {
-            c.traitTypes.map(t => {
-              <p><b>{t.type}:</b> {}</p>
-            })
-          }
-        })}
-      </article>
-    </>
-  )
+const genSettings = {
+  gender: "boy",
+  culture: "eastern",
+  
 }
 
 
 
+// 1a. Click one randomize Button.
+// 1b. Check if genSettings has decided tags for relevant tag types.
+// 1c. If tag already decided, stick with that, else, roll for tag type and set genSetting for that tag type.
+// 1d. Filter results by genSetting tags.
+
+// If two conflicting tags are set by manual user Input, the tag with a higher Chance
+// is dominant by default. 
+// If both chances are equal, last one set is dominant.
+// Have a 'tag display' list to show options. Allow user to click and change the
+// dominant tag manually, or turn off the tag-lock-filter entirely.
+
+// OR, that tag type is set to a 'no-tag-lock' mode, where it always rolls with the
+// vanilla chance table for every relevant occasion.
+
+// OR, the 'genSettings' table is actually comprised of 'lists', where no items
+// means it's unset, 1 item is the typical tag default with a 100% chance, and subsequent
+// added items break the chance up between the tags evenly 
 
 
-
-
-
-
-
-
-
-
-
-
-
+// The CHANCES take effect during the tag-rolling Step. They are a float.
+// The TAG SETTINGS are BOOLEAN FILTERS that don't effect 'chance', but just if the filter 
+// will FILTER out the options or not.
+// THAT is purely random numbers.
 
 
 
@@ -143,7 +101,7 @@ function rollTagType(chances) {
   }
   return tag
 }
-
+genSettings
 // TESTED
 function mapAndRollTagChances(allChances) {
   const allRolledTags = allChances.map(chances => {

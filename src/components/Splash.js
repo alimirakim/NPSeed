@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom'
 import { SET_CHANCES, getAllTraits, setTraits } from '../actions/traitActions'
 import { setSettings, updateSetting, } from '../actions/settingActions'
 import { getGenerator } from '../actions/genActions'
+import { getGenSettings } from '../actions/genSettingActions'
 import TraitField from './TraitField'
 
 // *****************************************************************************
@@ -38,84 +39,86 @@ export default function Splash() {
   const categories = useSelector(state => state.categories)
   const settings = useSelector(state => state.setting)
   const generator = useSelector(state => state.generator)
-  const [gotResults, setGotResults] = useState(false)
+  const genSettings = useSelector(state => state.genSettings)
   const [fieldValues, setFieldValues] = useState({})
 
   useEffect(() => {
     if (!categories.length) {
       dispatch(getAllTraits())
-    } else {
-      dispatch(getGenerator(2))
-      dispatch(setSettings(categories))
     }
-  }, [categories])
+    if (!generator.id) {
+      dispatch(getGenerator(2))
+    } else {
+      dispatch(setSettings(categories))
+      console.log("generator.tagTypeChances", generator.tagTypeChances)
+      dispatch(getGenSettings(generator.tagTypeChances))
+    }
+  }, [categories, generator])
 
-  const handleChange = (ev) => {
-    console.log("test?")
-    console.log({ type: ev.target.name, trait: ev.target.value })
-    dispatch(updateSetting({ type: ev.target.name, trait: ev.target.value }))
-    setFieldValues({ ...fieldValues, [ev.target.name]: ev.target.value })
-  }
+const handleChange = (ev) => {
+  console.log("test?")
+  console.log({ type: ev.target.name, trait: ev.target.value })
+  dispatch(updateSetting({ type: ev.target.name, trait: ev.target.value }))
+  setFieldValues({ ...fieldValues, [ev.target.name]: ev.target.value })
+}
 
-  const handleSubmit = (ev) => {
-    ev.preventDefault()
-    console.log("field values?", fieldValues)
-    categories.map(c => {
-      c.traitTypes.map(t => {
-        // if (settings[t.type]) {
-        if (fieldValues[t.type]) {
-          return { [t.type]: settings[t.type] }
-        } else if (t.traits.length === 0) {
-          return { [t.type]: "" }
-        } else {
-          const i = Math.floor(Math.random() * Math.floor(t.traits.length))
-          dispatch(updateSetting({ type: t.type, trait: t.traits[i].trait }))
-        }
-      })
+const handleSubmit = (ev) => {
+  ev.preventDefault()
+  console.log("field values?", fieldValues)
+  categories.map(c => {
+    c.traitTypes.map(t => {
+      if (fieldValues[t.type]) {
+        return { [t.type]: settings[t.type] }
+      } else if (t.traits.length === 0) {
+        return { [t.type]: "" }
+      } else {
+        const i = Math.floor(Math.random() * Math.floor(t.traits.length))
+        dispatch(updateSetting({ type: t.type, trait: t.traits[i].trait }))
+      }
     })
-    setGotResults(true)
-  }
+  })
+}
 
-  if (!categories.length || !Object.keys(settings).length) return null
+if (!categories.length || !Object.keys(settings).length) return null
 
-  return (
-    <>
-      <form onSubmit={handleSubmit}>
-        <h2>Customize Options</h2>
-        {categories.map(c => (
-          <>
-            <h3><b>Category:</b> {c.category}</h3>
-            {c.traitTypes.map(t => (
-              <>
-                <br />
-                <label>{t.type}:
+return (
+  <>
+    <form onSubmit={handleSubmit}>
+      <h2>Customize Options</h2>
+      {categories.map(c => (
+        <>
+          <h3><b>Category:</b> {c.category}</h3>
+          {c.traitTypes.map(t => (
+            <>
+              <br />
+              <label>{t.type}:
                 <TraitField traitType={t} handleChange={handleChange} fieldValues={fieldValues} setFieldValues={setFieldValues} />
-                </label>
-              </>
-            ))}
-          </>
-        ))}
-        <br />
-        <button>Submit</button>
-      </form>
+              </label>
+            </>
+          ))}
+        </>
+      ))}
+      <br />
+      <button>Submit</button>
+    </form>
 
-      <article id="npc-display">
-        <h2>NPC Results</h2>
-        {categories.map(c => (
-          <>
-            <h3><b>Category:</b> {c.category}</h3>
-            {c.traitTypes.map(t => {
-              {/* console.log("this is...", settings[c.category]) */ }
-              {/* console.log("this T is...", t.type) */ }
-              return (
-                <div><b>{t.type}:</b> {settings[t.type]}</div>
-              )
-            })}
-          </>
-        ))}
-      </article>
-    </>
-  )
+    <article id="npc-display">
+      <h2>NPC Results</h2>
+      {categories.map(c => (
+        <>
+          <h3><b>Category:</b> {c.category}</h3>
+          {c.traitTypes.map(t => {
+            {/* console.log("this is...", settings[c.category]) */ }
+            {/* console.log("this T is...", t.type) */ }
+            return (
+              <div><b>{t.type}:</b> {settings[t.type]}</div>
+            )
+          })}
+        </>
+      ))}
+    </article>
+  </>
+)
 }
 
 

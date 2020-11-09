@@ -4,7 +4,7 @@
 export const SET_SETTINGS = 'SET_SETTINGS'
 export const GET_SETTINGS = 'GET_SETTINGS'
 export const CLEAR_SETTINGS = 'CLEAR_SETTINGS'
-export const UPDATE_SETTING = 'CLEAR_SETTING'
+export const UPDATE_SETTING = 'UPDATE_SETTING'
 
 // ACTION CREATORS
 export const setSetting = (settings) => ({ type: SET_SETTINGS, settings })
@@ -14,9 +14,7 @@ export const updateSetting = (traitType) => ({type: UPDATE_SETTING, traitType})
 export const setSettings = (categories) => {
   const defaultSettings = {}
   for (const c of categories) {
-    // defaultSettings[c.category] = {}
     for (const t of c.traitTypes) {
-      // defaultSettings[c.category][t.type] = ""
       defaultSettings[t.type] = ""
     }
   }
