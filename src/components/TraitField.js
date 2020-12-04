@@ -31,7 +31,6 @@ export default function TraitField({ traitType, handleChange, fieldValues, setFi
 
   // TESTED
   function mapChancesToPercent(chances) {
-    console.log("chances", chances)
     const total = chances.reduce((prev, current) => {
       const newChance = { ...current }
       newChance.chance = prev.chance + current.chance
@@ -56,64 +55,59 @@ export default function TraitField({ traitType, handleChange, fieldValues, setFi
     }
     return tag
   }
+  
+  function getTraitTags(trait) {
+    const traitTags = trait.tagTypes.map(tagType => {
+      dispatch(updateGenSetting({type: tagType.type, tag: tagType.tag}))
+    })
+  } 
 
   // TESTED
   function mapAndRollTagChances(tagTypes) {
-    console.log("tagTypes", tagTypes)
     const allRolledTags = tagTypes.map(tagType => {
-      if (!genSettings[tagType.type]) {
+      // if (!genSettings[tagType.type]) { // NOTE This would limit results based on generator settings.
         const percentChances = mapChancesToPercent(tagType.chances)
         const rolledTag = rollTagType(percentChances)
-        console.log("the rolled tag type", tagType)
-        dispatch(updateGenSetting({type: tagType.type, tag: rolledTag}))
+        dispatch(updateGenSetting({type: tagType.type, tag: rolledTag.tag}))
         return rolledTag
-      } else {
-        return genSettings[tagType.type]
-      }
+      // } else {
+        // return genSettings[tagType.type]
+      // }
     })
     return allRolledTags
   }
 
   function filterTraitsByTags(tags, traits) {
-    console.log("tags", tags)
     const tagIds = tags.map(tag => tag.tagId)
-    console.log("tagIds, traits", tagIds, traits)
     const traitsWithTags = traits.filter(trait => {
       const traitTagIds = trait.tags.map(tag => tag.id)
       const traitHasIds = true
-      console.log("trait", trait)
-      console.log("tags", tags)
       for (const tagId of tagIds) {
-        if (!traitTagIds.includes(tagId)) {
-          return false
-        }
+        if (!traitTagIds.includes(tagId)) return false
       }
       return traitHasIds
     })
-    console.log("traitsWithTags", traitsWithTags)
     return traitsWithTags
   }
 
   const getRandomTrait = (ev) => {
     const traitTypeTagTypeIds = traitType.tagTypes.map(tagType => tagType.id)
-    console.log('traitTypeTagTypeIds', traitTypeTagTypeIds)
     const traitTypeTagTypeChances = tagTypeChances.filter(tagTypeChance => {
       if (traitTypeTagTypeIds.includes(tagTypeChance.typeId)) return tagTypeChance
     })
-    console.log("traitTypeTagTypeChances", traitTypeTagTypeChances)
     const allRolledTags = mapAndRollTagChances(traitTypeTagTypeChances)
     let traitsWithTags = filterTraitsByTags(allRolledTags, traitType.traits)
-    console.log("traitsWithTags!", traitsWithTags)
     let i;
+    let count = 0
+    console.log("traitsWithTags", traitsWithTags)
     do {
       i = Math.floor(Math.random() * Math.floor(traitsWithTags.length))
-    } while (fieldValue === traitsWithTags[i].trait)
+      console.log("i", i)
+      count++
+    } while (fieldValue === traitsWithTags[i].trait && count < 10)
     setFieldValue(traitsWithTags[i].trait)
     setFieldValues({ ...fieldValues, [traitType.type]: traitsWithTags[i].trait })
     dispatch(updateSetting({ type: traitType.type, trait: traitsWithTags[i].trait }))
-    console.log("allRolledTags", allRolledTags)
-    console.log("traitsWithTags", traitsWithTags)
-
   }
 
   return (
@@ -140,6 +134,8 @@ export default function TraitField({ traitType, handleChange, fieldValues, setFi
             setFieldValue(newValue.trait)
             setFieldValues({ ...fieldValues, [traitType.type]: newValue.trait })
             dispatch(updateSetting({ type: traitType.type, trait: newValue.trait }))
+            dispatch(updateGenSetting({type: traitType.tagType}))
+            getTraitTags(newValue.trait)
           }
         }}
 

@@ -1,4 +1,26 @@
-const { Step } = require("@material-ui/core")
+
+
+handleRandomize(ev)
+
+
+// Loop through Trait's tag types.
+// If tag type is set to 'chanceLock on', roll for tag type's tag.
+// Add tag to generator setting's tags set.
+// Return list of tags
+setTraitTags(traitType)
+
+// Loop through every trait.
+// Filter out traits that don't have at least 1 tag per traitType's tag types.
+filterTraitsByTags(tags, traits)
+
+// Return a random trait from the list of traits.
+// Set trait setting to new trait
+getRandomTrait(tagFilteredTraits)
+
+// Wipe the general settings clear.
+// Loop through every current trait setting.
+// Add every tag from every current trait setting to the general setting sets.
+matchGenSettingsToTraitSettings(traitSettings)
 
 
 
@@ -6,11 +28,9 @@ const { Step } = require("@material-ui/core")
 
 
 
-const genSettings = {
-  gender: "boy",
-  culture: "eastern",
-  
-}
+
+
+
 
 
 
@@ -31,7 +51,6 @@ const genSettings = {
 // OR, the 'genSettings' table is actually comprised of 'lists', where no items
 // means it's unset, 1 item is the typical tag default with a 100% chance, and subsequent
 // added items break the chance up between the tags evenly 
-
 
 // The CHANCES take effect during the tag-rolling Step. They are a float.
 // The TAG SETTINGS are BOOLEAN FILTERS that don't effect 'chance', but just if the filter 
@@ -101,7 +120,7 @@ function rollTagType(chances) {
   }
   return tag
 }
-genSettings
+
 // TESTED
 function mapAndRollTagChances(allChances) {
   const allRolledTags = allChances.map(chances => {

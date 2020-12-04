@@ -58,12 +58,12 @@ function App() {
           <main>
             <Switch>
               <Route path="/" exact={true} component={Splash} />
-              {/* <Route path="/signup" component={SignupForm} /> */}
-              {/* <Route path="/login" component={LoginForm} /> */}
-              {/* <Route path="/generator" component={GeneratorForm} /> */}
+              <Route path="/signup" component={SignupForm} />
+              <Route path="/login" component={LoginForm} />
+              <Route path="/generator" component={GeneratorForm} />
               {/* TODO The private profile will always be user's, with editing abilities etc. */}
-              {/* <PrivateRoute path={"/profile"} exact={true} component={Profile} /> */}
-              {/* <Route path={`/profile/:id`} component={Profile} /> */}
+              <PrivateRoute path={"/profile"} exact={true} component={Profile} />
+              <Route path={`/profile/:id`} component={Profile} />
             </Switch>
           </main>
           
