@@ -6,11 +6,11 @@ import {Tabs, Tab } from '@material-ui/core'
 
 
 // MY COMPONENTS
-import TraitField from './TraitField'
-import TraitDrawer from './TraitDrawer'
+import TraitField from '../TraitField'
+import TraitDrawer from '../TraitDrawer'
 
 // ACTIONS
-import { clearSettings } from '../store/actions/settingActions'
+import { clearSettings } from '../../store/actions/settingActions'
 
 // *****************************************************************************
 

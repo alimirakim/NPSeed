@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 // MY COMPONENTS
 
 // ACTIONS
-import { getUserChars } from '../store/actions/charActions'
+import { getUserChars } from '../../store/actions/charActions'
 
 // *****************************************************************************
 

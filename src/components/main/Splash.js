@@ -1,23 +1,23 @@
 import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { basePath } from '../config'
+import { basePath } from '../../config'
 
 import {
   getEstablishedTagIds,
   getApplicableTagIds,
   filterTraitsByTags,
   rollForTrait
-} from './utils'
+} from '../../utils'
 
 
 // MY COMPONENTS
-import ResultDisplay from './ResultDisplay'
+import ResultDisplay from '../ResultDisplay'
 
 // ACTIONS
-import { setAllContent } from '../store/actions/traitActions'
-import { updateSetting, } from '../store/actions/settingActions'
-import { setGenerator } from '../store/actions/genActions'
-import TraitFieldB from './TraitFieldB'
+import { setAllContent } from '../../store/actions/traitActions'
+import { updateSetting, } from '../../store/actions/settingActions'
+import { setGenerator } from '../../store/actions/genActions'
+import TraitField from '../TraitField'
 
 // *****************************************************************************
 
@@ -49,9 +49,7 @@ export default function Splash() {
   const traits = useSelector(state => state.traits)
   const tagTypes = useSelector(state => state.tagTypes)
   const tagTypeChances = useSelector(state => state.tagTypeChances)
-  const settings = useSelector(state => state.setting)
   const genSettings = useSelector(state => state.genSettings)
-  // const generator = useSelector(state => state.generator)
 
   useEffect(() => {
     // TODO Create action creator that does both simultaneously
@@ -66,9 +64,6 @@ export default function Splash() {
         const { generator, tagTypeChances } = await resGen.json()
         dispatch(setGenerator(generator, tagTypeChances))
 
-        // } else {
-        //   dispatch(setSettings(categories))
-        //   dispatch(getGenSettings(generator.tagTypeChances))
       })()
     }
   }, [])
@@ -98,22 +93,6 @@ export default function Splash() {
 
       <ResultDisplay />
 
-
-
-
-export function 
-      {openTraitsList && <>
-        <div className="pop lo-center">
-          <button onClick={handleCloseEdit} className="lo-x">&times;</button>
-          
-        </div>
-        <div className="lo-screen"></div>
-      </>}
-      
-      {isPopped && <div>
-      
-      </div>}
-
       <form onSubmit={handleSubmit}>
 
         <h2>Customize Options</h2>
@@ -124,8 +103,8 @@ export function
           <>
             <h3>Category: {c.category}</h3>
             {c.traitTypeIds.map(ttid => {
-              return (<TraitFieldB
-                traitType={traitTypes[ttid].traitType}
+              return (<TraitField
+                traitType={traitTypes[ttid]}
                 traitsOfType={Object.values(traits).filter(t => traitTypes[ttid].traitIds.includes(t.id))}
                 tagTypeIds={traitTypes[ttid].tagTypeIds}
               />)

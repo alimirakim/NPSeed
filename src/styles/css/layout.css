@@ -1,3 +1,14 @@
+.lo-pop {
+  z-index: 100;
+  position: fixed;
+  width: 80%;
+  max-height: 80vh;
+  background-color: white;
+  padding: 1rem;
+  box-shadow: 5px 5px 10px rgba(70, 70, 80, 0.5);
+  overflow: scroll;
+}
+
 .lo-board {
   position: relative;
 }
@@ -66,7 +77,6 @@ input {
 }
 
 .lo-center {
-  position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);

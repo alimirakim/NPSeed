@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import {
@@ -6,10 +6,10 @@ import {
   getApplicableTagIds,
   filterTraitsByTags,
   rollForNewTrait,
-} from './utils'
+} from '../utils'
 
-import TraitList from './TraitList'
-import TagOdds from './TagOdds'
+import TraitListView from './TraitListView'
+import TagOddsView from './TagOddsView'
 
 // *****************************************************************************
 
@@ -23,7 +23,7 @@ export default function FieldButtons({ traitsOfType, traitType, handleChange, ta
   const [openOdds, setOpenOdds] = useState(false)
 
   const handleGetRandomTrait = (e) => {
-    const prevId = settings[traitType]
+    const prevId = settings[traitType.traitType]
 
     const estTagIds = getEstablishedTagIds(settings, traits, prevId)
     const appTagIds = getApplicableTagIds(tagTypeIds, tagTypes, estTagIds, tagTypeChances)
@@ -34,15 +34,29 @@ export default function FieldButtons({ traitsOfType, traitType, handleChange, ta
     if (trait) handleChange(e, trait)
   }
 
-  const handleViewOdds = (e) => setOpenOdds(true)
-  const handleSeeTraits = (e) => setOpenTraits(true)
-  const handleSeeDetails = (e) => {}
+  const handleViewOdds = (e) => setOpenOdds(!openOdds)
+  const handleSeeTraits = (e) => setOpenTraits(!openTraits)
+  const handleSeeDetails = (e) => { }
 
 
   return (
     <>
-      <TraitList open={openTraits} traitType={traitType} traitsOfType={traitsOfType} />
-      <TagOdds open={openOdds} traitTagChances={traitTagChances} />
+
+      {openTraits && <>
+        <div className="lo-pop lo-center">
+          <button onClick={handleSeeTraits} className="lo-x">&times;</button>
+          <TraitListView traitType={traitType.traitType} traitsOfType={traitsOfType} />
+        </div>
+        <div className="lo-screen"></div>
+      </>}
+
+      {openOdds && <>
+        <div className="lo-pop lo-center">
+          <button onClick={handleViewOdds} className="lo-x">&times;</button>
+          <TagOddsView traitType={traitType} />
+        </div>
+        <div className="lo-screen"></div>
+      </>}
 
       <nav>
         <ul>
@@ -65,26 +79,22 @@ export default function FieldButtons({ traitsOfType, traitType, handleChange, ta
 
           <li>
             <button type="button"
-              onClick={handleSeeDetails}
-              className="fas fa-question-circle">
-              Details
-            </button>
-          </li>
-
-          <li>
-            <button type="button"
               onClick={handleViewOdds}
               className="fas fa-chart-pie">
               View Odds
             </button>
           </li>
 
+          <li>
+            <button type="button"
+              onClick={handleSeeDetails}
+              className="fas fa-question-circle">
+              Details
+            </button>
+          </li>
+
         </ul>
       </nav>
-
-      {isPopped && <>
-        <Popup />
-      </>}
     </>
   )
 }

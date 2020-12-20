@@ -1,165 +1,110 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 // MATERIAL-UI
 import { TextField } from '@material-ui/core'
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete'
 
-import {
-  rollTagWithWeightedRandomChance,
-  getRandomTrait,
-} from './utils'
-
-// MY COMPONENTS
-
+// COMPONENTS
+import FieldButtons from './FieldButtons'
 
 // ACTIONS
-import { setSetting, updateSetting } from '../store/actions/settingActions'
 import { updateGenSetting } from '../store/actions/genSettingActions'
+
 // *****************************************************************************
 
 const filter = createFilterOptions()
-console.log("filter", filter)
+
 // *****************************************************************************
 
 
-export default function TraitField({ traitT, traitsOfType }) {
+export default function TraitField({ traitType, traitsOfType, tagTypeIds }) {
   const dispatch = useDispatch()
-  // console.log("traitT", traitT)
-  const tagTypeChances = useSelector(state => state.generator.tagTypeChances)
-  const genSettings = useSelector(state => state.genSettings)
-  const [fieldValue, setFieldValue] = useState("")
-
-  const handleChange = (e) => {
-    setFieldValue(e.target.value)
-  }
-
-  // Select a weighted-random tag for each tag type based on generator chances,
-  // Ignoring tags that have already been decided.
-  function mapAndRollTagChances(tagTypeChances) {
-    const allRolledTags = tagTypeChances.map(ttc => {
-      // if (!genSettings[tagType.type]) { // NOTE This would limit results based on generator settings.
-      // dispatch(updateGenSetting({ type: ttc.type, tag: rolledTag.tag }))
-      return allRolledTags
-      // } else {
-      // return genSettings[tagType.type]
-      // }
-    })
-    return allRolledTags
-  }
-
-
-  function getTraitTags(trait) {
-    const traitTags = trait.tagTypes.map(tagType => {
-      dispatch(updateGenSetting({ type: tagType.type, tag: tagType.tag }))
-    })
-  }
-  // console.log("traitsOfType", traitsOfType)
-
-
-  function handleChangeAlt(ev, newValue) {
-    console.log("onChange ev, newValue", ev.target, newValue)
-    if (typeof newValue === 'string') {
-      setFieldValue(newValue)
-      dispatch(updateSetting({ type: traitT.traitType, trait: newValue }))
-      // } else if (newValue && newValue.inputValue) {
-      //   setFieldValue(newValue.inputValue)
-      //   dispatch(updateSetting({ type: traitT.traitType, trait: newValue.inputValue }))
+  const [value, setValue] = useState({ trait: "", tagIds: [] })
+  console.log("traitType from Splash", traitType)
+  
+  useEffect(() => {
+    
+    if (value && value.id) {
+      dispatch(updateGenSetting({ traitType: traitType.traitType, trait: value.id }))
+    } else if (value) {
+      dispatch(updateGenSetting({ traitType: traitType.traitType, trait: value.trait }))
     } else {
-      setFieldValue(newValue.trait)
-      dispatch(updateSetting({ type: traitT.traitType, trait: newValue.trait }))
-      dispatch(updateGenSetting({ tagTypeId: traitT.tagTypeId, tagIds: newValue.trait.tagIds }))
+      dispatch(updateGenSetting({ traitType: traitType.traitType, trait: "" }))
+      
     }
+  }, [value])
+
+  const handleChange = (e, newVal) => {
+    if (typeof newVal === "string") setValue({ trait: newVal, tagIds: [] })
+    else if (newVal && newVal.inputValue) setValue({ trait: newVal.inputValue, tagIds: [] })
+    else setValue(newVal)
   }
 
-  function handleChangeBalt(e) {
-    console.log("onChange ev", e.target.value)
-    if (typeof e.target.value === 'string') {
-      setFieldValue(e.target.value)
-      // } else if (newValue && newValue.inputValue) {
-      //   setFieldValue(newValue.inputValue)
-      //   dispatch(updateSetting({ type: traitT.traitType, trait: newValue.inputValue }))
-    } else {
-      setFieldValue(e.target.value.trait)
-      dispatch(updateSetting({ type: traitT.traitType, trait: e.target.value.trait }))
-      dispatch(updateGenSetting({ tagTypeId: traitT.tagTypeId, tagIds: e.target.value.trait.tagIds }))
+  const handleFilter = (options, params) => {
+    const filtered = filter(options, params)
+    // Suggest creating new value
+    if (params.inputValue !== "") {
+      filtered.unshift(
+        { inputValue: params.inputValue, trait: `(Custom) ${params.inputValue}` }
+      )
     }
+    return filtered
+  }
+
+  const handleOptionLabel = (option) => {
+    // Value selected with Enter, right from the input
+    if (typeof option === "string") return option
+    // Add 'xxx' option created dynamically
+    else if (option.inputValue) return option.inputValue
+    // Normal option
+    else return option.trait
   }
 
   return (
     <>
-      <h3>{traitT.traitType.toUpperCase()}</h3>
-
       <Autocomplete
-        value={fieldValue}
+        style={{ width: 300 }}
+        value={value}
         options={traitsOfType}
+        getOptionLabel={handleOptionLabel}
+        onChange={handleChange}
+        filterOptions={handleFilter}
+        renderOption={(option) => option.trait}
         selectOnFocus
         clearOnBlur
         handleHomeEndKeys
         freeSolo
-
-        onChange={handleChange}
-
-        filterOptions={(options, params) => {
-          // console.log("filterOptions", options)
-          const filtered = filter(options, params)
-          console.log("filterOptions", filtered, params)
-          if (params.inputValue !== "") {
-            filtered.unshift(`(Free Choice) ${params.inputValue}`)
-          }
-          return filtered
-        }}
-
-        getOptionLabel={(option, params) => {
-          console.log("getOptionLabel param", option, params)
-          if (typeof option === 'string') return option
-          else if (option.inputValue) return option.inputValue
-          else return option.trait
-        }}
-
-        renderOption={traitObj => {
-          // { console.log("renderOption param", traitObj) }
-          return traitObj.trait
-        }}
-
-        renderInput={(params) => {
-          // console.log("textfield", fieldValue, params)
-          return (
-            <TextField
-              {...params}
-              onChange={handleChange}
-              name={traitT.traitType}
-              placeholder="Leave it to chance!"
-              size="small"
-            />
-          )
-        }}
+        renderInput={(params) => <TextField {...params} label={traitType.traitType} />}
       />
 
-      {/* <small><nav>
-        <ul>
-          <li>
-            <label>View Odds<button type="button" >
-              <PieChart />
-            </button></label>
-          </li>
-          <li>
-            <label>Randomize<button type="button" onClick={getRandomTrait}>
-              <Casino />
-            </button></label>
-          </li>
-          <li>
-            <label>See All Traits<button type="button" >
-              <Notes />
-            </button></label>
-          </li>
-          <li>
-            <label>Details<button type="button" >
-              <HelpOutline />
-            </button></label>
-          </li>
-        </ul>
-      </nav></small> */}
+      <FieldButtons
+        traitsOfType={traitsOfType}
+        traitType={traitType}
+        handleChange={handleChange}
+        tagTypeIds={tagTypeIds}
+      />
+      
+      
+      
     </>
   )
 }
+
+
+// TODO
+// tabs
+// Create popup for ViewOdds, SeeTraits
+// Style results display
+// Style customizer form -> LayersOutlined, buttons
+// Create 'tag settings' sidebar showing currently set tags
+
+// Create character-saving option
+// Use recharts to display pie chart breakdown
+// Populate with shit-ton of seeder data
+
+// Push to heroku
+
+// Incorporate chanceLock to chances
+// Check that the options allows for multiple settings for the same tag Type
+// Create 'tag types' board that allows direct tag-setting customization

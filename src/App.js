@@ -7,13 +7,13 @@ import { basePath } from './config'
 import { CssBaseline } from '@material-ui/core'
 
 // MY COMPONENTS
-import Splash from './components/Splash'
+import Splash from './components/main/Splash'
 import LoginForm from './components/LoginForm'
 import SignupForm from './components/SignupForm'
 import Header from './components/Header'
 import Footer from './components/Footer'
-import Profile from './components/Profile'
-import GeneratorForm from './components/GeneratorForm'
+import Profile from './components/main/Profile'
+import GeneratorForm from './components/main/GeneratorForm'
 
 // ACTION CREATORS
 import { setUserToken } from './store/actions/authActions'
@@ -67,7 +67,7 @@ function App() {
       <CssBaseline />
       <BrowserRouter>
 
-        {/* <Header /> */}
+        <Header />
 
         <main>
           <Switch>
@@ -81,7 +81,7 @@ function App() {
           </Switch>
         </main>
 
-        {/* <Footer /> */}
+        <Footer />
 
       </BrowserRouter>
     </>
