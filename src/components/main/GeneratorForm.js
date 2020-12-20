@@ -10,8 +10,7 @@ import TraitField from './TraitField'
 import TraitDrawer from './TraitDrawer'
 
 // ACTIONS
-import { getTraitsByCategory } from '../actions/traitActions'
-import { clearSettings } from '../actions/settingActions'
+import { clearSettings } from '../store/actions/settingActions'
 
 // *****************************************************************************
 
@@ -47,11 +46,6 @@ export default function GeneratorForm() {
   
   useEffect(() => {
     if (!traitTypes.length) {
-      dispatch(getTraitsByCategory(1))
-      dispatch(getTraitsByCategory(3))
-      dispatch(getTraitsByCategory(4))
-      dispatch(getTraitsByCategory(2))
-      dispatch(getTraitsByCategory(5))
     }
   }, [])
 
@@ -136,7 +130,7 @@ export default function GeneratorForm() {
             <ul>
               {npc.map(type => {
                 for (const thing in type) {
-                  return <li style={{ listStyleType: "none" }}>{thing.toUpperCase()}: {type[thing]}</li>
+                  return <li>{thing.toUpperCase()}: {type[thing]}</li>
                 }
               })}
             </ul>

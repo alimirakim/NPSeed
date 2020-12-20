@@ -1,4 +1,4 @@
-// import { basePath } from '../config'
+// import { basePath } from '../../config'
 // import {setLoginErrors} from './errActions'
 
 // export const MAKE_USER = 'MAKE_USER'

@@ -1,4 +1,5 @@
-import { basePath } from '../config'
+import { basePath } from '../../config'
+
 
 // ACTION TYPES
 export const GET_USER_CHARS = 'GET_USER_CHARS'

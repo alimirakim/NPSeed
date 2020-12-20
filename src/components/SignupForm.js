@@ -8,7 +8,7 @@ import { UsernameForm, EmailForm, PasswordForm, ConfirmPasswordForm, }
 import ErrorsDisplay from './ErrorsDisplay'
 
 // ACTIONS
-import { makeUser } from '../actions/authActions'
+import { makeUser } from '../store/actions/authActions'
 
 // *****************************************************************************
 
@@ -39,7 +39,7 @@ export default function SignUpForm() {
 
       <ErrorsDisplay />
 
-      <form onSubmit={handleSubmit} style={{ textAlign: "center" }}>
+      <form onSubmit={handleSubmit}>
         {/* <input type="hidden" name="_csrf" value={csrfToken} /> */}
         <UsernameForm username={signupData.username} handleChange={handleChange} />
         <EmailForm email={signupData.email} handleChange={handleChange} />

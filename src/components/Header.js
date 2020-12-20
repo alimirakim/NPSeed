@@ -14,7 +14,7 @@ import { AccountCircle } from '@material-ui/icons'
 
 
 // ACTIONS
-import { deleteUserToken } from '../actions/authActions'
+import { deleteUserToken } from '../store/actions/authActions'
 
 // *****************************************************************************
 

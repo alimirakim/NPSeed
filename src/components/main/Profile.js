@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 // MY COMPONENTS
 
 // ACTIONS
-import { getUserChars } from '../actions/charActions'
+import { getUserChars } from '../store/actions/charActions'
 
 // *****************************************************************************
 
@@ -42,7 +42,7 @@ function UserCharacters() {
   if (!chars) return null
 
   return (
-    <ul style={{ display: "flex", flexWrap: "wrap" }}>
+    <ul>
       {chars.map(char => <li key={char.name}><CharCard charId={char.id} /></li>)}
     </ul>
   )

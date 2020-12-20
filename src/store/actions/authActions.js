@@ -1,5 +1,6 @@
-import { basePath } from '../config'
+import { basePath } from '../../config'
 import { setLoginErrors } from './errActions'
+
 
 /* ACTION TYPES */
 export const SET_USER_TOKEN = 'SET_USER_TOKEN'

@@ -17,7 +17,7 @@ import {
 import { AccountCircle } from '@material-ui/icons'
 import { makeStyles } from '@material-ui/core/styles'
 
-import { deleteUserToken } from '../actions/authActions'
+import { deleteUserToken } from '../store/actions/authActions'
 
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
@@ -113,7 +113,6 @@ export default function ClippedDrawer() {
             to={{ pathname: "/signup"}}
             variant="contained"
             color="secondary"
-            style={{margin: "0 1rem"}}
           >
             Sign up
           </Button>

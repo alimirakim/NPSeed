@@ -1,0 +1,41 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  position: relative;
+  min-height: 100vh;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  color: #463c46;
+  background-color: red;
+}
+
+main {
+  padding: 0 2rem;
+}
+
+button {
+  cursor: pointer;
+  border-width: 0;
+  color: #463c46;
+  background-color: rgba(0, 0, 0, 0);
+}
+
+button:active, button:focus {
+  outline: none;
+}
+
+ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+a {
+  color: #463c46;
+  text-decoration: none;
+}
+
+.active {
+  border-width: 3px;
+}
+/*# sourceMappingURL=base.css.map */

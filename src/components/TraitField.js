@@ -4,175 +4,140 @@ import { useDispatch, useSelector } from 'react-redux'
 // MATERIAL-UI
 import { TextField } from '@material-ui/core'
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete'
+
 import {
-  Notes,
-  Casino,
-  PieChart,
-  HelpOutline,
-} from '@material-ui/icons'
-// import clsx from 'clsx';
+  rollTagWithWeightedRandomChance,
+  getRandomTrait,
+} from './utils'
 
 // MY COMPONENTS
 
 
 // ACTIONS
-import { setSetting, updateSetting } from '../actions/settingActions'
-import { updateGenSetting } from '../actions/genSettingActions'
+import { setSetting, updateSetting } from '../store/actions/settingActions'
+import { updateGenSetting } from '../store/actions/genSettingActions'
 // *****************************************************************************
 
 const filter = createFilterOptions()
+console.log("filter", filter)
+// *****************************************************************************
 
 
-export default function TraitField({ traitType, handleChange, fieldValues, setFieldValues }) {
+export default function TraitField({ traitT, traitsOfType }) {
   const dispatch = useDispatch()
+  // console.log("traitT", traitT)
   const tagTypeChances = useSelector(state => state.generator.tagTypeChances)
   const genSettings = useSelector(state => state.genSettings)
   const [fieldValue, setFieldValue] = useState("")
 
-  // TESTED
-  function mapChancesToPercent(chances) {
-    const total = chances.reduce((prev, current) => {
-      const newChance = { ...current }
-      newChance.chance = prev.chance + current.chance
-      return newChance
-    })
-    return chances.map(c => {
-      const chancePercent = { ...c }
-      chancePercent.chance = c.chance / total.chance
-      return chancePercent
-    })
+  const handleChange = (e) => {
+    setFieldValue(e.target.value)
   }
 
-  // TESTED
-  function rollTagType(chances) {
-    const rand = Math.random()
-    console.log([rand, chances])
-    let tag = null, i = 0, current = 0
-    while (!tag && i < 10) {
-      if (rand < chances[i].chance + current) tag = chances[i]
-      current += chances[i].chance
-      i++
-    }
-    return tag
-  }
-  
-  function getTraitTags(trait) {
-    const traitTags = trait.tagTypes.map(tagType => {
-      dispatch(updateGenSetting({type: tagType.type, tag: tagType.tag}))
-    })
-  } 
-
-  // TESTED
-  function mapAndRollTagChances(tagTypes) {
-    const allRolledTags = tagTypes.map(tagType => {
+  // Select a weighted-random tag for each tag type based on generator chances,
+  // Ignoring tags that have already been decided.
+  function mapAndRollTagChances(tagTypeChances) {
+    const allRolledTags = tagTypeChances.map(ttc => {
       // if (!genSettings[tagType.type]) { // NOTE This would limit results based on generator settings.
-        const percentChances = mapChancesToPercent(tagType.chances)
-        const rolledTag = rollTagType(percentChances)
-        dispatch(updateGenSetting({type: tagType.type, tag: rolledTag.tag}))
-        return rolledTag
+      // dispatch(updateGenSetting({ type: ttc.type, tag: rolledTag.tag }))
+      return allRolledTags
       // } else {
-        // return genSettings[tagType.type]
+      // return genSettings[tagType.type]
       // }
     })
     return allRolledTags
   }
 
-  function filterTraitsByTags(tags, traits) {
-    const tagIds = tags.map(tag => tag.tagId)
-    const traitsWithTags = traits.filter(trait => {
-      const traitTagIds = trait.tags.map(tag => tag.id)
-      const traitHasIds = true
-      for (const tagId of tagIds) {
-        if (!traitTagIds.includes(tagId)) return false
-      }
-      return traitHasIds
+
+  function getTraitTags(trait) {
+    const traitTags = trait.tagTypes.map(tagType => {
+      dispatch(updateGenSetting({ type: tagType.type, tag: tagType.tag }))
     })
-    return traitsWithTags
+  }
+  // console.log("traitsOfType", traitsOfType)
+
+
+  function handleChangeAlt(ev, newValue) {
+    console.log("onChange ev, newValue", ev.target, newValue)
+    if (typeof newValue === 'string') {
+      setFieldValue(newValue)
+      dispatch(updateSetting({ type: traitT.traitType, trait: newValue }))
+      // } else if (newValue && newValue.inputValue) {
+      //   setFieldValue(newValue.inputValue)
+      //   dispatch(updateSetting({ type: traitT.traitType, trait: newValue.inputValue }))
+    } else {
+      setFieldValue(newValue.trait)
+      dispatch(updateSetting({ type: traitT.traitType, trait: newValue.trait }))
+      dispatch(updateGenSetting({ tagTypeId: traitT.tagTypeId, tagIds: newValue.trait.tagIds }))
+    }
   }
 
-  const getRandomTrait = (ev) => {
-    const traitTypeTagTypeIds = traitType.tagTypes.map(tagType => tagType.id)
-    const traitTypeTagTypeChances = tagTypeChances.filter(tagTypeChance => {
-      if (traitTypeTagTypeIds.includes(tagTypeChance.typeId)) return tagTypeChance
-    })
-    const allRolledTags = mapAndRollTagChances(traitTypeTagTypeChances)
-    let traitsWithTags = filterTraitsByTags(allRolledTags, traitType.traits)
-    let i;
-    let count = 0
-    console.log("traitsWithTags", traitsWithTags)
-    do {
-      i = Math.floor(Math.random() * Math.floor(traitsWithTags.length))
-      console.log("i", i)
-      count++
-    } while (fieldValue === traitsWithTags[i].trait && count < 10)
-    setFieldValue(traitsWithTags[i].trait)
-    setFieldValues({ ...fieldValues, [traitType.type]: traitsWithTags[i].trait })
-    dispatch(updateSetting({ type: traitType.type, trait: traitsWithTags[i].trait }))
+  function handleChangeBalt(e) {
+    console.log("onChange ev", e.target.value)
+    if (typeof e.target.value === 'string') {
+      setFieldValue(e.target.value)
+      // } else if (newValue && newValue.inputValue) {
+      //   setFieldValue(newValue.inputValue)
+      //   dispatch(updateSetting({ type: traitT.traitType, trait: newValue.inputValue }))
+    } else {
+      setFieldValue(e.target.value.trait)
+      dispatch(updateSetting({ type: traitT.traitType, trait: e.target.value.trait }))
+      dispatch(updateGenSetting({ tagTypeId: traitT.tagTypeId, tagIds: e.target.value.trait.tagIds }))
+    }
   }
 
   return (
     <>
-      <h3>{traitType.type.toUpperCase()}</h3>
+      <h3>{traitT.traitType.toUpperCase()}</h3>
 
       <Autocomplete
         value={fieldValue}
-        options={traitType.traits}
+        options={traitsOfType}
         selectOnFocus
         clearOnBlur
         handleHomeEndKeys
         freeSolo
 
-        onChange={(ev, newValue) => {
-          // console.log("onChange ev, newValue", ev, newValue)
-          if (typeof newValue === 'string') {
-            setFieldValue(newValue)
-            dispatch(updateSetting({ type: traitType.type, trait: newValue }))
-          } else if (newValue && newValue.inputValue) {
-            setFieldValue(newValue.inputValue)
-            dispatch(updateSetting({ type: traitType.type, trait: newValue.inputValue }))
-          } else {
-            setFieldValue(newValue.trait)
-            setFieldValues({ ...fieldValues, [traitType.type]: newValue.trait })
-            dispatch(updateSetting({ type: traitType.type, trait: newValue.trait }))
-            dispatch(updateGenSetting({type: traitType.tagType}))
-            getTraitTags(newValue.trait)
-          }
-        }}
+        onChange={handleChange}
 
         filterOptions={(options, params) => {
-          // console.log("filterOptions options, params", options, params)
+          // console.log("filterOptions", options)
           const filtered = filter(options, params)
+          console.log("filterOptions", filtered, params)
           if (params.inputValue !== "") {
             filtered.unshift(`(Free Choice) ${params.inputValue}`)
           }
           return filtered
         }}
 
-        getOptionLabel={(traitObj, params) => {
-          // console.log("getOptionLabel param", traitObj, params)
-          if (typeof traitObj === 'string') return traitObj
-          if (traitObj.inputValue) return traitObj.inputValue
-          return traitObj.trait
+        getOptionLabel={(option, params) => {
+          console.log("getOptionLabel param", option, params)
+          if (typeof option === 'string') return option
+          else if (option.inputValue) return option.inputValue
+          else return option.trait
         }}
 
         renderOption={traitObj => {
-          { console.log("renderOption param", traitObj) }
+          // { console.log("renderOption param", traitObj) }
           return traitObj.trait
         }}
 
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            onChange={handleChange}
-            name={traitType.type}
-            placeholder="Leave it to chance!"
-            size="small"
-          />
-        )}
+        renderInput={(params) => {
+          // console.log("textfield", fieldValue, params)
+          return (
+            <TextField
+              {...params}
+              onChange={handleChange}
+              name={traitT.traitType}
+              placeholder="Leave it to chance!"
+              size="small"
+            />
+          )
+        }}
       />
 
-      <small><nav>
-        <ul style={{ display: "flex" }}>
+      {/* <small><nav>
+        <ul>
           <li>
             <label>View Odds<button type="button" >
               <PieChart />
@@ -194,106 +159,7 @@ export default function TraitField({ traitType, handleChange, fieldValues, setFi
             </button></label>
           </li>
         </ul>
-      </nav></small>
+      </nav></small> */}
     </>
   )
 }
-
-
-// *****************************************************************************
-
-// export function TraitFielddd({ type, setCurrentTraitTypes, open, setOpen }) {
-//   const dispatch = useDispatch()
-//   const [fieldValue, setFieldValue] = useState(null)
-//   const setting = useSelector(state => state.setting)
-
-//   useEffect(() => {
-//     if (!setting[type.traitType]) dispatch(setSetting({ [type.traitType]: fieldValue }))
-
-//   }, [])
-
-//   const getRandomTrait = (ev) => {
-//     const i = Math.floor(Math.random() * Math.floor(type.traits.length))
-//     setFieldValue(type.traits[i])
-//     dispatch(setSetting({ [type.traitType]: type.traits[i] }))
-//     // ev.target.color = "primary"
-//     // TODO Double-check for off-by-one bugs
-//   }
-
-//   const showAllTraits = (ev) => {
-//     setCurrentTraitTypes(type)
-//     // setOpen(true);
-//   }
-
-//   return (
-//     <>
-//       <h3>{type.traitType.toUpperCase()}</h3>
-
-//       <Autocomplete
-//         value={fieldValue}
-//         options={type.traits}
-//         selectOnFocus
-//         clearOnBlur
-//         handleHomeEndKeys
-//         freeSolo
-
-//         onChange={(ev, newValue) => {
-//           if (typeof newValue === 'string') {
-//             setFieldValue(newValue)
-//           } else if (newValue && newValue.inputValue) {
-//             setFieldValue(newValue.inputValue)
-//           } else {
-//             setFieldValue(newValue)
-//           }
-//         }}
-
-//         filterOptions={(options, params) => {
-//           const filtered = filter(options, params)
-//           if (params.inputValue !== "") {
-//             filtered.unshift(`(Free Choice) ${params.inputValue}`
-//             )
-//           }
-//           return filtered
-//         }}
-
-//         getOptionLabel={(type) => {
-//           if (typeof type === 'string') return type
-//           if (type.inputValue) return type.inputValue
-//           return type.trait
-//         }}
-
-//         renderOption={trait => trait}
-
-//         renderInput={(params) => (
-//           <TextField {...params} placeholder="Leave it to chance!" variant="outlined" color="primary" />
-//         )}
-//       />
-
-//       <nav>
-//         <ul>
-//           <li>
-//             <label>View Odds<button>
-//               <PieChart />
-//             </button></label>
-//           </li>
-//           <li>
-//             <label>Randomize<button onClick={getRandomTrait}>
-//               <Casino />
-//             </button></label>
-//           </li>
-//           <li>
-//             <label>See All Traits<button onClick={showAllTraits}>
-//               {/* aria-label="open drawer" className={clsx(open && classes.hide)}> */}
-//               <Notes />
-//             </button></label>
-//           </li>
-//           <li>
-//             <label>Details<button>
-//               <HelpOutline />
-//             </button></label>
-//           </li>
-//         </ul>
-//       </nav>
-//     </>
-//   )
-// }

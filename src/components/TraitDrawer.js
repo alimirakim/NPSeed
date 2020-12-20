@@ -112,7 +112,7 @@ export default function TraitDrawer({ open, setOpen, currentTraitTypes, }) {
       <Divider />
       <div className={classes.drawerContainer}>
         <List>
-          <h3 style={{ margin: "1rem" }}>{currentTraitTypes.traitType} Options</h3>
+          <h3>{currentTraitTypes.traitType} Options</h3>
           <Divider />
           {currentTraitTypes.traits.map((trait) => (
             <>

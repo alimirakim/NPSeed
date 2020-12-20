@@ -1,0 +1,122 @@
+
+.lo-board {
+  position: relative;
+  
+}
+
+.lo-grida {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 20%);
+}
+
+.lo-screen {
+  z-index: 80;
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  pointer-events: all;
+}
+
+.lo-txt-con > input {
+  display: block;
+  width: 100%;
+  margin: 0 0 0.5rem 0;
+  border-radius: 0.2rem;
+  border-color: lightgray;
+  padding: 0.5rem;
+}
+
+.lo-txt-con-sm > input {
+  display: block;
+  width: 80%;
+  margin: 0 0 0.5rem 0;
+  border-radius: 0.2rem;
+  border-color: lightgray;
+  padding: 0.5rem;
+}
+
+input {
+  outline: none;
+  border-style: solid;
+}
+
+
+.lo-wow {
+  margin: 1rem auto 0;
+  width: 100%;
+  font: bold italic 2rem Cambria;
+  transition: all 0.2s ease-in;
+}
+
+.lo-wow:hover, .lo-wow > a:hover {
+  color: black;
+}
+
+.lo-wow > i {
+  transition: all 0.1s ease-in;
+}
+.lo-wow:hover > i {
+  transform: scale(1.1) rotate(10deg);
+}
+
+.lo-slim {
+  margin: 1rem 0 0.1rem;
+  font-style: italic;
+}
+
+.lo-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.lo-center-h {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.lo-center-y {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.lo-x {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 2rem;
+  width: 2rem;
+  margin: 1rem;
+  border-radius: 50%;
+  border: 0;
+  padding: 0;
+  color: gray;
+  background-color: rgba(255,255,255,0.5);
+  font: bold 2rem Calibri;
+  text-align: center;
+  line-height: 0;
+  transition: all 0.2s ease;
+}
+.lo-x:hover {
+  background-color: rgba(200,200,200,0.2);
+}
+.lo-x:active {
+  color:white;
+  background-color: lightgray;
+}
+
+/* Small box container */
+.lo-scrollbox-sml {
+  height: 10rem;
+  width: 100%;
+  overflow-y: scroll;
+  padding-right: 2rem;
+  /* border-top-left-radius: 0; */
+  /* border-bottom-left-radius: 0; */
+  /* border-right: 0.5rem rgba(0,0,0,0) solid; */
+}

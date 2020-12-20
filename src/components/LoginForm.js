@@ -7,7 +7,7 @@ import { UsernameForm, PasswordForm } from './FormInputs'
 import ErrorsDisplay from './ErrorsDisplay'
 
 // ACTIONS
-import { login } from '../actions/authActions'
+import { login } from '../store/actions/authActions'
 
 // *****************************************************************************
 

@@ -7,9 +7,7 @@ export const DELETE_GEN_SETTING = 'DELETE_GEN_SETTING'
 
 // ACTION CREATORS
 export const clearGenSettings = () => ({ type: CLEAR_GEN_SETTINGS })
-
-export const updateGenSetting = (tagType) => ({ type: UPDATE_GEN_SETTING, tagType })
-
+export const updateGenSetting = (content) => ({ type: UPDATE_GEN_SETTING, content })
 export const deleteGenSetting = (tagType) => ({ type: DELETE_GEN_SETTING, tagType })
 
 export const getGenSettings = (tagTypeChances) => {
