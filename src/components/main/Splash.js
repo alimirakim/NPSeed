@@ -85,7 +85,9 @@ export default function Splash() {
     })
   }
 
+  console.log("in splash")
   if (!Object.keys(categories)) return null
+  console.log("got cats")
 
   return (
     <>

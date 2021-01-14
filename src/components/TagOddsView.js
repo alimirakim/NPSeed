@@ -28,23 +28,10 @@ export default function TagOddsView({ traitType }) {
 // Format probability data for one tag type, for use with rechart
 
 
-function pieLabelPercentOnSlice(props) {
-  const RADIAN = Math.PI / 180;
-  const { cx, cy, midAngle, innerRadius, outerRadius, percent } = props
-  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-  const x = cx + radius * Math.cos(-midAngle * RADIAN);
-  const y = cy + radius * Math.sin(-midAngle * RADIAN);
-
-  return (<>
-    <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
-      {`${(percent * 100).toFixed(0)}%`}
-    </text>
-  </>);
-}
-
 
 function TagTypeChancesPieChart({ tagTypeChance }) {
   const tags = useSelector(state => state.tags)
+  const [activeIndex, setActiveIndex] = useState(0)
   const data = []
   let h = 200
   tagTypeChance.tagChances.forEach(tc => {
@@ -57,9 +44,6 @@ function TagTypeChancesPieChart({ tagTypeChance }) {
   })
 
 
-
-  const [activeIndex, setActiveIndex] = useState(0)
-
   const handleMouseEnter = (data, i) => setActiveIndex(i)
 
 
@@ -68,11 +52,11 @@ function TagTypeChancesPieChart({ tagTypeChance }) {
       <Pie
         data={data}
         cx="50%" cy="50%"
-        label={pieLabelPercentOnSlice}
+        label={pieCustomLabel}
         outerRadius={80}
         dataKey="value"
         activeIndex={activeIndex}
-        activeShape={pieLabelNameOuterSlice}
+        activeShape={pieLabelHoverEffect}
         onMouseEnter={handleMouseEnter}
       >
         {data.map((entry, i) => (
@@ -84,13 +68,15 @@ function TagTypeChancesPieChart({ tagTypeChance }) {
   )
 }
 
-function pieLabelNameOuterSlice(props) {
-  console.log("active props", props)
+
+
+function pieCustomLabel(props) {
   const RADIAN = Math.PI / 180;
   const {
-    cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle,
-    fill, payload, percent, value, index, name, color
+    cx, cy, midAngle, innerRadius, outerRadius, fill, percent, name, color
   } = props;
+  
+  // For outer-slice name label
   const sin = Math.sin(-RADIAN * midAngle);
   const cos = Math.cos(-RADIAN * midAngle);
   const sx = cx + (outerRadius) * cos;
@@ -108,6 +94,35 @@ function pieLabelNameOuterSlice(props) {
 
   return (
     <g>
+    
+      <path d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`} stroke={fill} fill="none" />
+      <circle cx={ex} cy={ey} r={2} fill={fill} stroke="none" />
+      <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} textAnchor={textAnchor} fill={color}>{name}</text>
+
+      <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
+        {`${(percent * 100).toFixed(0)}%`}
+      </text>
+      
+    </g>
+  )
+}
+
+
+
+function pieLabelHoverEffect(props) {
+  console.log("active props", props)
+  const RADIAN = Math.PI / 180;
+  const {
+    cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill
+  } = props;
+  const sin = Math.sin(-RADIAN * midAngle);
+  const cos = Math.cos(-RADIAN * midAngle);
+  const mx = cx + (outerRadius + 20) * cos;
+  const my = cy + (outerRadius + 20) * sin;
+
+  return (
+    <g>
+    {/* Renders inner pie slice */}
       <Sector
         cx={cx}
         cy={cy}
@@ -117,6 +132,7 @@ function pieLabelNameOuterSlice(props) {
         endAngle={endAngle}
         fill={fill}
       />
+      {/* Renders outer pie ring-slice */}
       <Sector
         cx={cx}
         cy={cy}
@@ -126,14 +142,6 @@ function pieLabelNameOuterSlice(props) {
         outerRadius={outerRadius + 10}
         fill={fill}
       />
-      <path d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`} stroke={fill} fill="none" />
-      <circle cx={ex} cy={ey} r={2} fill={fill} stroke="none" />
-      <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} textAnchor={textAnchor} fill={color}>{name}</text>
-
-
-      {/* <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
-        {`${(percent * 100).toFixed(0)}%`}
-      </text> */}
     </g>
   )
 }
